@@ -30,6 +30,7 @@
 #include <sys/stat.h>
 
 #include "get_funcs.hpp"
+#include "string_funcs.hpp"
 
 /**
  * @brief Splits a string into a vector of substrings using a specified

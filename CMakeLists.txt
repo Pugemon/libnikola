@@ -24,6 +24,7 @@ include(cmake/variables.cmake)
 add_library(
         libnikola_libnikola
         source/libnikola.cpp
+        source/get_funcs.cpp
 )
 add_library(libnikola::libnikola ALIAS libnikola_libnikola)
 

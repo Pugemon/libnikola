@@ -7,9 +7,11 @@
 #include "libnikola/libnikola.hpp"
 
 LibNikola::LibNikola()
-        : m_name {"libnikola"} {}
+    : m_name {"libnikola"}
+{
+}
 
 auto LibNikola::name() const -> char const*
 {
-    return m_name.c_str();
+  return m_name.c_str();
 }
