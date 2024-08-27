@@ -1,0 +1,58 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 14,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "dev-common",
+      "hidden": true,
+      "inherits": ["dev-mode"],
+      "cacheVariables": {
+        "BUILD_MCSS_DOCS": "ON"
+      }
+    },
+    {
+      "name": "dev-linux",
+      "binaryDir": "${sourceDir}/build/dev-linux",
+      "inherits": ["dev-common", "ci-linux"],
+      "environment": {
+        "DEVKITPRO": "/opt/devkitpro"
+      },
+      "toolchainFile": "/opt/devkitpro/cmake/Switch.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "dev",
+      "binaryDir": "${sourceDir}/build/dev",
+      "inherits": "dev-linux"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "dev",
+      "configurePreset": "dev",
+      "configuration": "Debug",
+      "jobs": 8
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "dev",
+      "configurePreset": "dev",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "jobs": 8,
+        "noTestsAction": "error"
+      }
+    }
+  ]
+}

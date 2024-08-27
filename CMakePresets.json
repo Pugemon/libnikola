@@ -1,0 +1,92 @@
+{
+  "version": 2,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 14,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "cmake-pedantic",
+      "hidden": true,
+      "warnings": {
+        "dev": true,
+        "deprecated": true,
+        "uninitialized": true,
+        "unusedCli": true
+
+      },
+      "errors": {
+        "dev": true,
+        "deprecated": true
+      }
+    },
+    {
+      "name": "dev-mode",
+      "hidden": true,
+      "inherits": "cmake-pedantic",
+      "cacheVariables": {
+        "libnikola_DEVELOPER_MODE": "ON"
+      }
+    },
+    {
+      "name": "cppcheck",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_CPPCHECK": "cppcheck;--inline-suppr"
+      }
+    },
+{
+      "name": "clang-tidy",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--header-filter=^${sourceDir}/"
+      }
+    },
+    {
+      "name": "ci-std",
+      "description": "This preset makes sure the project actually builds with at least the specified standard",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_EXTENSIONS": "OFF",
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON"
+      }
+    },
+    {
+      "name": "ci-linux",
+      "inherits": ["ci-std"],
+      "generator": "Unix Makefiles",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "ci-sanitize",
+      "binaryDir": "${sourceDir}/build/sanitize",
+      "inherits": ["ci-linux", "dev-mode"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Sanitize",
+        "CMAKE_CXX_FLAGS_SANITIZE": "-U_FORTIFY_SOURCE -O2 -g -fsanitize=address,undefined -fno-omit-frame-pointer -fno-common"
+      }
+    },
+    {
+      "name": "ci-build",
+      "binaryDir": "${sourceDir}/build",
+      "hidden": true
+    },
+    {
+      "name": "ci-multi-config",
+      "description": "Speed up multi-config generators by generating only one configuration instead of the defaults",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Release"
+      }
+    },
+    {
+      "name": "ci-ubuntu",
+      "inherits": ["ci-build", "ci-linux", "clang-tidy", "cppcheck", "dev-mode"]
+    }
+  ]
+}
