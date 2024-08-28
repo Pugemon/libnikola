@@ -25,6 +25,9 @@
 #include <vector>
 #include <sys/stat.h>
 
+namespace nikola::utils
+{
+
 /**
  * @brief Trims leading and trailing whitespaces from a string.
  *
@@ -265,4 +268,5 @@ std::vector<std::string> stringToList(const std::string& str)
   }
 
   return result;
+}
 }

@@ -6,11 +6,13 @@
 #define LIBNIKOLA_NIKOLA_HPP
 
 #include <string>
-#include "nikola/get_funcs.hpp"
-#include "nikola/ini_funcs.hpp"
-#include "nikola/string_funcs.hpp"
-#include "nikola/tesla.hpp"
 
+#include "nikola/tesla.hpp"
+#include "nikola/utils/get_funcs.hpp"
+#include "nikola/utils/ini_funcs.hpp"
+#include "nikola/utils/string_funcs.hpp"
+
+namespace nikola {
 
 /**
  * @brief Reports the name of the library
@@ -32,4 +34,5 @@ private:
   std::string m_name;
 };
 
+} // namespace nikola
 #endif  // LIBNIKOLA_NIKOLA_HPP

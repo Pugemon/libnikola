@@ -23,6 +23,8 @@
 #include <string>
 #include <vector>
 
+namespace nikola::utils
+{
 /**
  * @brief Reads the contents of a file and returns it as a string.
  *
@@ -124,3 +126,5 @@ std::vector<std::string> getFilesListByWildcard(const std::string& pathPattern);
  */
 std::vector<std::string> getFilesListByWildcards(
     const std::string& pathPattern);
+
+}  // namespace nikola::utils::get

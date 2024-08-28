@@ -68,8 +68,7 @@ float M_PI = 3.14159265358979323846;
 #include <strings.h>
 #include <switch.h>
 
-#include "ini_funcs.hpp"
-
+#include "nikola/utils/ini_funcs.hpp"
 
 bool isValidHexColor(const std::string& hexColor)
 {

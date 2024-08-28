@@ -6,10 +6,10 @@
 #include <cstdio>  // For FILE*, fopen(), fclose(), fprintf(), etc.
 #include <sstream>  // For std::istringstream
 
-#include "nikola/ini_funcs.hpp"
+#include "nikola/utils/ini_funcs.hpp"
 
-#include "nikola/get_funcs.hpp"
-#include "nikola/string_funcs.hpp"
+#include "nikola/utils/get_funcs.hpp"
+#include "nikola/utils/string_funcs.hpp"
 
 std::vector<std::string> split(const std::string& str, char delim)
 {

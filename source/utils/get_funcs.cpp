@@ -1,13 +1,16 @@
 //
 // Created by pugemon on 27.08.24.
 //
-#include "nikola/get_funcs.hpp"
+#include "nikola/utils/get_funcs.hpp"
 
 #include <dirent.h>
 #include <fnmatch.h>
 #include <sys/stat.h>
 
-#include "nikola/string_funcs.hpp"
+#include "nikola/utils/string_funcs.hpp"
+
+namespace nikola::utils
+{
 
 std::string getFileContents(const std::string& filePath)
 {
@@ -302,4 +305,6 @@ std::vector<std::string> getFilesListByWildcards(const std::string& pathPattern)
   }
 
   return fileList;
+}
+
 }

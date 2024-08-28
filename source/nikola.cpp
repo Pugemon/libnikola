@@ -2,9 +2,10 @@
 // Created by pugemon on 27.08.24.
 //
 
-#include <string>
 
 #include "nikola.hpp"
+
+using namespace nikola;
 
 LibNikola::LibNikola()
     : m_name {"nikola"}
