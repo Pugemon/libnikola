@@ -11,6 +11,9 @@
 #include "nikola/utils/get_funcs.hpp"
 #include "nikola/utils/string_funcs.hpp"
 
+namespace nikola::utils
+{
+
 std::vector<std::string> split(const std::string& str, char delim)
 {
   std::vector<std::string> out;
@@ -605,4 +608,5 @@ void setIniFile(const std::string& fileToEdit,
   if (rename(tempPath.c_str(), filePath.c_str()) != 0) {
     // Failed to rename the temp file, handle the error accordingly
   }
+}
 }

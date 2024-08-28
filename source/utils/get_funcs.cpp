@@ -5,7 +5,10 @@
 
 #include <dirent.h>
 #include <fnmatch.h>
+#include <cstdio>
 #include <sys/stat.h>
+#include <algorithm>
+#include <string>
 
 #include "nikola/utils/string_funcs.hpp"
 
