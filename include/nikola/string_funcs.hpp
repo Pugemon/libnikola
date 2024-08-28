@@ -19,9 +19,11 @@
  ********************************************************************************/
 
 #pragma once
+#include <cstddef>
 #include <regex>
 #include <string>
 #include <vector>
+#include <sys/stat.h>
 
 /**
  * @brief Trims leading and trailing whitespaces from a string.

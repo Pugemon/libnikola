@@ -1,50 +1,17 @@
-/********************************************************************************
- * File: ini_funcs.hpp
- * Author: ppkantorski
- * Description:
- *   This header file provides functions for working with INI (Initialization)
- *files in C++. It includes functions for reading, parsing, and editing INI
- *files, as well as cleaning INI file formatting.
- *
- *   For the latest updates and contributions, visit the project's GitHub
- *repository. (GitHub Repository:
- *https://github.com/ppkantorski/Ultrahand-Overlay)
- *
- *   Note: Please be aware that this notice cannot be altered or removed. It is
- *a part of the project's documentation and must remain intact.
- *
- *  Copyright (c) 2023 ppkantorski
- *  All rights reserved.
- ********************************************************************************/
-
-#pragma once
+//
+// Created by pugemon on 28.08.24.
+//
 #include <algorithm>  // For std::remove_if
 #include <cctype>  // For ::isspace
 #include <cstdio>  // For FILE*, fopen(), fclose(), fprintf(), etc.
-#include <cstring>  // For std::string, strlen(), etc.
-#include <map>  // For std::map
 #include <sstream>  // For std::istringstream
-#include <string>  // For std::string
-#include <vector>  // For std::vector
 
-#include <sys/stat.h>
+#include "nikola/ini_funcs.hpp"
 
-#include "get_funcs.hpp"
-#include "string_funcs.hpp"
+#include "nikola/get_funcs.hpp"
+#include "nikola/string_funcs.hpp"
 
-/**
- * @brief Splits a string into a vector of substrings using a specified
- * delimiter.
- *
- * This function splits a given string into multiple substrings based on the
- * specified delimiter.
- *
- * @param str The input string to be split.
- * @param delim The delimiter character used for splitting (default is space '
- * ').
- * @return A vector of substrings obtained by splitting the input string.
- */
-static std::vector<std::string> split(const std::string& str, char delim = ' ')
+std::vector<std::string> split(const std::string& str, char delim)
 {
   std::vector<std::string> out;
 
@@ -60,20 +27,8 @@ static std::vector<std::string> split(const std::string& str, char delim = ' ')
   return out;
 }
 
-/**
- * @brief Parses an INI-formatted string into a map of sections and key-value
- * pairs.
- *
- * This function parses an INI-formatted string and organizes the data into a
- * map, where sections are keys and key-value pairs are stored within each
- * section.
- *
- * @param str The INI-formatted string to parse.
- * @return A map representing the parsed INI data.
- */
-[[maybe_unused]] static std::map<std::string,
-                                 std::map<std::string, std::string>>
-parseIni(const std::string& str)
+std::map<std::string, std::map<std::string, std::string>> parseIni(
+    const std::string& str)
 {
   std::map<std::string, std::map<std::string, std::string>> iniData;
 
@@ -94,18 +49,7 @@ parseIni(const std::string& str)
   return iniData;
 }
 
-/**
- * @brief Parses an INI file and returns its content as a map of sections and
- * key-value pairs.
- *
- * This function reads the contents of an INI file located at the specified
- * path, parses it into a map structure, where section names are keys and
- * key-value pairs are stored within each section.
- *
- * @param configIniPath The path to the INI file to be parsed.
- * @return A map representing the parsed INI data.
- */
-std::map<std::string, std::map<std::string, std::string>>
+[[maybe_unused]] std::map<std::string, std::map<std::string, std::string>>
 getParsedDataFromIniFile(const std::string& configIniPath)
 {
   std::map<std::string, std::map<std::string, std::string>> parsedData;
@@ -164,16 +108,8 @@ getParsedDataFromIniFile(const std::string& configIniPath)
   return parsedData;
 }
 
-/**
- * @brief Parses sections from an INI file and returns them as a list of
- * strings.
- *
- * This function reads an INI file and extracts the section names from it.
- *
- * @param filePath The path to the INI file.
- * @return A vector of section names.
- */
-std::vector<std::string> parseSectionsFromIni(const std::string& filePath)
+[[maybe_unused]] std::vector<std::string> parseSectionsFromIni(
+    const std::string& filePath)
 {
   std::vector<std::string> sections;
 
@@ -199,7 +135,6 @@ std::vector<std::string> parseSectionsFromIni(const std::string& filePath)
   fclose(file);
   return sections;
 }
-
 std::string parseValueFromIniSection(const std::string& filePath,
                                      const std::string& sectionName,
                                      const std::string& keyName)
@@ -241,11 +176,11 @@ std::string parseValueFromIniSection(const std::string& filePath,
 
   return value;
 }
-
-std::string parseValueFromIniSectionF(FILE*& file,
-                                      const std::string& filePath,
-                                      const std::string& sectionName,
-                                      const std::string& keyName)
+[[maybe_unused]] std::string parseValueFromIniSectionF(
+    FILE*& file,
+    const std::string& filePath,
+    const std::string& sectionName,
+    const std::string& keyName)
 {
   std::string value = "";
 
@@ -284,19 +219,7 @@ std::string parseValueFromIniSectionF(FILE*& file,
 
   return value;
 }
-
-/**
- * @brief Cleans the formatting of an INI file by removing empty lines and
- * standardizing section formatting.
- *
- * This function takes an INI file located at the specified path, removes empty
- * lines, and standardizes the formatting of sections by ensuring that there is
- * a newline between each section's closing ']' and the next section's opening
- * '['.
- *
- * @param filePath The path to the INI file to be cleaned.
- */
-void cleanIniFormatting(const std::string& filePath)
+[[maybe_unused]] void cleanIniFormatting(const std::string& filePath)
 {
   FILE* inputFile = fopen(filePath.c_str(), "r");
   if (!inputFile) {
@@ -340,25 +263,6 @@ void cleanIniFormatting(const std::string& filePath)
   remove(filePath.c_str());
   rename(tempPath.c_str(), filePath.c_str());
 }
-
-/**
- * @brief Modifies or creates an INI file by adding or updating key-value pairs
- * in the specified section.
- *
- * This function attempts to open the specified INI file for reading. If the
- * file doesn't exist, it creates a new file and adds the specified section and
- * key-value pair. If the file exists, it reads its contents, modifies or adds
- * the key-value pair in the specified section, and saves the changes back to
- * the original file.
- *
- * @param fileToEdit      The path to the INI file to be modified or created.
- * @param desiredSection  The name of the section in which the key-value pair
- * should be added or updated.
- * @param desiredKey      The key for the key-value pair to be added or updated.
- * @param desiredValue    The new value for the key-value pair.
- * @param desiredNewKey   (Optional) If provided, the function will rename the
- * key while preserving the original value.
- */
 void setIniFile(const std::string& fileToEdit,
                 const std::string& desiredSection,
                 const std::string& desiredKey,
@@ -504,66 +408,24 @@ void setIniFile(const std::string& fileToEdit,
   fprintf(configFile, "%s", updatedContent.c_str());
   fclose(configFile);
 }
-
-/**
- * @brief Sets the value of a key in an INI file within the specified section
- * and cleans the formatting.
- *
- * This function sets the value of the specified key within the given section of
- * the INI file. If the key or section does not exist, it creates them. After
- * updating the INI file, it cleans the formatting to ensure proper INI file
- * structure.
- *
- * @param fileToEdit      The path to the INI file to be modified or created.
- * @param desiredSection  The name of the section in which the key-value pair
- * should be added or updated.
- * @param desiredKey      The key for the key-value pair to be added or updated.
- * @param desiredValue    The new value for the key-value pair.
- */
-void setIniFileValue(const std::string& fileToEdit,
-                     const std::string& desiredSection,
-                     const std::string& desiredKey,
-                     const std::string& desiredValue)
+[[maybe_unused]] void setIniFileValue(const std::string& fileToEdit,
+                                      const std::string& desiredSection,
+                                      const std::string& desiredKey,
+                                      const std::string& desiredValue)
 {
   setIniFile(fileToEdit, desiredSection, desiredKey, desiredValue, "");
   // cleanIniFormatting(fileToEdit);
 }
-
-/**
- * @brief Sets the key name to a new name in an INI file within the specified
- * section and cleans the formatting.
- *
- * This function sets the key name to a new name within the given section of the
- * INI file. If the key or section does not exist, it creates them. After
- * updating the INI file, it cleans the formatting to ensure proper INI file
- * structure.
- *
- * @param fileToEdit      The path to the INI file to be modified or created.
- * @param desiredSection  The name of the section in which the key-name change
- * should occur.
- * @param desiredKey      The key name to be changed.
- * @param desiredNewKey   The new key name to replace the original key name.
- */
-void setIniFileKey(const std::string& fileToEdit,
-                   const std::string& desiredSection,
-                   const std::string& desiredKey,
-                   const std::string& desiredNewKey)
+[[maybe_unused]] void setIniFileKey(const std::string& fileToEdit,
+                                    const std::string& desiredSection,
+                                    const std::string& desiredKey,
+                                    const std::string& desiredNewKey)
 {
   setIniFile(fileToEdit, desiredSection, desiredKey, "", desiredNewKey);
   // cleanIniFormatting(fileToEdit);
 }
-
-/**
- * @brief Adds a new section to an INI file.
- *
- * This function adds a new section with the specified name to the INI file
- * located at the specified path. If the section already exists, it does
- * nothing.
- *
- * @param filePath The path to the INI file.
- * @param sectionName The name of the section to add.
- */
-void addIniSection(const char* filePath, const char* sectionName)
+[[maybe_unused]] void addIniSection(const char* filePath,
+                                    const char* sectionName)
 {
   if (!isFileOrDirectory(filePath)) {
     // INI file doesn't exist, handle the error accordingly
@@ -619,22 +481,9 @@ void addIniSection(const char* filePath, const char* sectionName)
   // std::cout << "Section '" << sectionName << "' added to the INI file." <<
   // std::endl;
 }
-
-/**
- * @brief Renames a section in an INI file.
- *
- * This function renames the section with the specified current name to the
- * specified new name in the INI file located at the specified path. If the
- * current section does not exist, or if the new section name already exists, it
- * does nothing.
- *
- * @param filePath The path to the INI file.
- * @param currentSectionName The name of the section to rename.
- * @param newSectionName The new name for the section.
- */
-void renameIniSection(const std::string& filePath,
-                      const std::string& currentSectionName,
-                      const std::string& newSectionName)
+[[maybe_unused]] void renameIniSection(const std::string& filePath,
+                                       const std::string& currentSectionName,
+                                       const std::string& newSectionName)
 {
   FILE* configFile = fopen(filePath.c_str(), "r");
   if (!configFile) {
@@ -696,19 +545,8 @@ void renameIniSection(const std::string& filePath,
     // Failed to rename the temp file, handle the error accordingly
   }
 }
-
-/**
- * @brief Removes a section from an INI file.
- *
- * This function removes the section with the specified name, including all its
- * associated key-value pairs, from the INI file located at the specified path.
- * If the section does not exist in the file, it does nothing.
- *
- * @param filePath The path to the INI file.
- * @param sectionName The name of the section to remove.
- */
-void removeIniSection(const std::string& filePath,
-                      const std::string& sectionName)
+[[maybe_unused]] void removeIniSection(const std::string& filePath,
+                                       const std::string& sectionName)
 {
   FILE* configFile = fopen(filePath.c_str(), "r");
   if (!configFile) {
@@ -750,7 +588,7 @@ void removeIniSection(const std::string& filePath,
         removing = false;
       }
     } else if (!removing) {
-      // Keep lines outside of the section
+      // Keep lines outside the section
       fprintf(tempFile, "%s\n", currentLine.c_str());
     }
   }

@@ -1,13 +1,13 @@
 //
 // Created by pugemon on 27.08.24.
 //
-#include "libnikola/get_funcs.hpp"
+#include "nikola/get_funcs.hpp"
 
 #include <dirent.h>
 #include <fnmatch.h>
 #include <sys/stat.h>
 
-#include "libnikola/string_funcs.hpp"
+#include "nikola/string_funcs.hpp"
 
 std::string getFileContents(const std::string& filePath)
 {

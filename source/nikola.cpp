@@ -4,10 +4,10 @@
 
 #include <string>
 
-#include "libnikola/libnikola.hpp"
+#include "nikola.hpp"
 
 LibNikola::LibNikola()
-    : m_name {"libnikola"}
+    : m_name {"nikola"}
 {
 }
 
