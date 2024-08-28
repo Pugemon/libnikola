@@ -29,9 +29,6 @@ add_library(
 )
 add_library(libnikola::libnikola ALIAS libnikola_libnikola)
 
-if(NOT BUILD_SHARED_LIBS)
-    target_compile_definitions(libnikola_libnikola PUBLIC LIBNIKOLA_STATIC_DEFINE)
-endif()
 
 set_target_properties(
         libnikola_libnikola PROPERTIES
@@ -49,11 +46,6 @@ target_include_directories(
         "\$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
 )
 
-target_include_directories(
-        libnikola_libnikola SYSTEM
-        PUBLIC
-        "\$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/export>"
-)
 
 target_compile_features(libnikola_libnikola PUBLIC cxx_std_20)
 
