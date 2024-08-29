@@ -28,6 +28,7 @@ add_library(
         source/utils/ini_funcs.cpp
         source/utils/string_funcs.cpp
         source/tesla/hlp.cpp
+        source/tesla/elm.cpp
 )
 add_library(libnikola::libnikola ALIAS libnikola_libnikola)
 

@@ -5,16 +5,18 @@
 #ifndef LIBNIKOLA_ELM_HPP
 #define LIBNIKOLA_ELM_HPP
 
-#include "gfx.hpp"
 #include <algorithm>
+#include <chrono>
+#include <cmath>
+#include <cstdlib>
 #include <cstring>
 #include <cwctype>
 #include <string>
 
-#include <cmath>
-#include <cstdlib>
 #include <strings.h>
 #include <switch.h>
+
+#include "gfx.hpp"
 
 namespace nikola::tsl::elm
 {
@@ -53,10 +55,7 @@ public:
    * is passed for the initial load
    * @return Element to focus
    */
-  virtual Element* requestFocus(Element* oldFocus, FocusDirection direction)
-  {
-    return nullptr;
-  }
+  virtual Element* requestFocus(Element* oldFocus, FocusDirection direction);
 
   /**
    * @brief Function called when a joycon button got pressed
@@ -65,7 +64,7 @@ public:
    * @return true when button press has been consumed
    * @return false when button press should be passed on to the parent
    */
-  virtual bool onClick(u64 keys) { return m_clickListener(keys); }
+  virtual bool onClick(u64 keys);
 
   /**
    * @brief Function called when the element got touched
@@ -76,7 +75,7 @@ public:
    * @return true when touch input has been consumed
    * @return false when touch input should be passed on to the parent
    */
-  virtual bool onTouch(u32 x, u32 y) { return false; }
+  virtual bool onTouch(u32 x, u32 y);
 
   /**
    * @brief Called once per frame to draw the element
@@ -110,30 +109,13 @@ public:
    *
    * @param renderer
    */
-  virtual void frame(gfx::Renderer* renderer) final
-  {
-    if (this->m_focused)
-      this->drawHighlight(renderer);
-
-    this->draw(renderer);
-  }
+  virtual void frame(gfx::Renderer* renderer) final;
 
   /**
    * @brief Forces a layout recreation of a element
    *
    */
-  virtual void invalidate() final
-  {
-    const auto& parent = this->getParent();
-
-    if (parent == nullptr)
-      this->layout(0, 0, cfg::FramebufferWidth, cfg::FramebufferHeight);
-    else
-      this->layout(parent->getX(),
-                   parent->getY(),
-                   parent->getWidth(),
-                   parent->getHeight());
-  }
+  virtual void invalidate() final;
 
   /**
    * @brief Shake the highlight in the given direction to signal that the focus
@@ -141,12 +123,7 @@ public:
    *
    * @param direction Direction to shake highlight in
    */
-  virtual void shakeHighlight(FocusDirection direction) final
-  {
-    this->m_highlightShaking = true;
-    this->m_highlightShakingDirection = direction;
-    this->m_highlightShakingStartTime = std::chrono::system_clock::now();
-  }
+  virtual void shakeHighlight(FocusDirection direction) final;
 
   /**
    * @brief Draws the blue boarder when a element is highlighted
@@ -155,79 +132,7 @@ public:
    *
    * @param renderer Renderer
    */
-  virtual void drawHighlight(gfx::Renderer* renderer)
-  {
-    // Get the current time
-    auto currentTime = std::chrono::system_clock::now();
-    auto timeInSeconds =
-        std::chrono::duration<double>(currentTime.time_since_epoch()).count();
-
-    // Calculate the progress for one full sine wave per second
-    const double cycleDuration = 1.0;  // 1 second for one full sine wave
-    double timeCounter = fmod(timeInSeconds, cycleDuration);
-    float progress = (std::sin(2 * M_PI * timeCounter / cycleDuration) + 1) / 2;
-
-    tsl::gfx::Color highlightColor = {
-        static_cast<u8>((highlightColor1.r - highlightColor2.r) * progress
-                        + highlightColor2.r),
-        static_cast<u8>((highlightColor1.g - highlightColor2.g) * progress
-                        + highlightColor2.g),
-        static_cast<u8>((highlightColor1.b - highlightColor2.b) * progress
-                        + highlightColor2.b),
-        0xF};
-    s32 x = 0, y = 0;
-
-    if (this->m_highlightShaking) {
-      auto t = (std::chrono::system_clock::now()
-                - this->m_highlightShakingStartTime);
-      if (t >= 100ms)
-        this->m_highlightShaking = false;
-      else {
-        s32 amplitude = std::rand() % 5 + 5;
-
-        switch (this->m_highlightShakingDirection) {
-          case FocusDirection::Up:
-            y -= shakeAnimation(t, amplitude);
-            break;
-          case FocusDirection::Down:
-            y += shakeAnimation(t, amplitude);
-            break;
-          case FocusDirection::Left:
-            x -= shakeAnimation(t, amplitude);
-            break;
-          case FocusDirection::Right:
-            x += shakeAnimation(t, amplitude);
-            break;
-          default:
-            break;
-        }
-
-        x = std::clamp(x, -amplitude, amplitude);
-        y = std::clamp(y, -amplitude, amplitude);
-      }
-    }
-
-    renderer->drawRect(
-        this->m_x, this->m_y, this->m_width, this->m_height, a(0xF000));
-
-    renderer->drawRect(this->m_x + x - 4,
-                       this->m_y + y - 4,
-                       this->m_width + 8,
-                       4,
-                       a(highlightColor));
-    renderer->drawRect(this->m_x + x - 4,
-                       this->m_y + y + this->m_height,
-                       this->m_width + 8,
-                       4,
-                       a(highlightColor));
-    renderer->drawRect(
-        this->m_x + x - 4, this->m_y + y, 4, this->m_height, a(highlightColor));
-    renderer->drawRect(this->m_x + x + this->m_width,
-                       this->m_y + y,
-                       4,
-                       this->m_height,
-                       a(highlightColor));
-  }
+  virtual void drawHighlight(gfx::Renderer* renderer);
 
   /**
    * @brief Sets the boundaries of this view
@@ -237,13 +142,7 @@ public:
    * @param width Width
    * @param height Height
    */
-  virtual void setBoundaries(u16 x, u16 y, u16 width, u16 height) final
-  {
-    this->m_x = x;
-    this->m_y = y;
-    this->m_width = width;
-    this->m_height = height;
-  }
+  virtual void setBoundaries(u16 x, u16 y, u16 width, u16 height) final;
 
   /**
    * @brief Adds a click listener to the element
@@ -251,10 +150,7 @@ public:
    * @param clickListener Click listener called with keys that were pressed last
    * frame. Callback should return true if keys got consumed
    */
-  virtual void setClickListener(std::function<bool(u64 keys)> clickListener)
-  {
-    this->m_clickListener = clickListener;
-  }
+  virtual void setClickListener(std::function<bool(u64 keys)> clickListener);
 
   /**
    * @brief Gets the element's X position
@@ -287,24 +183,21 @@ public:
    *
    * @param parent Parent
    */
-  virtual inline void setParent(Element* parent) final
-  {
-    this->m_parent = parent;
-  }
+  virtual inline void setParent(Element* parent) final;
 
   /**
    * @brief Get the element's parent
    *
    * @return Parent
    */
-  virtual inline Element* getParent() final { return this->m_parent; }
+  virtual inline Element* getParent() final;
 
   /**
    * @brief Marks this element as focused or unfocused to draw the highlight
    *
    * @param focused Focused
    */
-  virtual inline void setFocused(bool focused) { this->m_focused = focused; }
+  virtual inline void setFocused(bool focused);
 
 protected:
   constexpr static inline auto a = &gfx::Renderer::a;
@@ -330,15 +223,7 @@ private:
    * @param a Amplitude
    * @return Damped sine wave output
    */
-  int shakeAnimation(std::chrono::system_clock::duration t, float a)
-  {
-    float w = 0.2F;
-    float tau = 0.05F;
-
-    int t_ = t.count() / 1'000'000;
-
-    return roundf(a * exp(-(tau * t_) * sin(w * t_)));
-  }
+  int shakeAnimation(std::chrono::system_clock::duration t, float a);
 };
 
 /**
@@ -370,82 +255,24 @@ public:
       , m_subtitle(subtitle)
   {
   }
-  virtual ~OverlayFrame()
-  {
-    if (this->m_contentElement != nullptr)
-      delete this->m_contentElement;
-  }
+  virtual ~OverlayFrame();
 
-  virtual void draw(gfx::Renderer* renderer) override
-  {
-    renderer->fillScreen(a({0x0, 0x0, 0x0, alphabackground}));
-
-    renderer->drawString(
-        this->m_title.c_str(), false, 20, 50, 30, a(defaultTextColor));
-    renderer->drawString(
-        this->m_subtitle.c_str(), false, 20, 70, 15, a(defaultTextColor));
-
-    if (FullMode == true)
-      renderer->drawRect(15,
-                         720 - 73,
-                         tsl::cfg::FramebufferWidth - 30,
-                         1,
-                         a(defaultTextColor));
-    if (!deactivateOriginalFooter)
-      renderer->drawString("\uE0E1  Back     \uE0E0  OK",
-                           false,
-                           30,
-                           693,
-                           23,
-                           a(defaultTextColor));
-
-    if (this->m_contentElement != nullptr)
-      this->m_contentElement->frame(renderer);
-  }
+  virtual void draw(gfx::Renderer* renderer) override;
 
   virtual void layout(u16 parentX,
                       u16 parentY,
                       u16 parentWidth,
-                      u16 parentHeight) override
-  {
-    this->setBoundaries(parentX, parentY, parentWidth, parentHeight);
-
-    if (this->m_contentElement != nullptr) {
-      this->m_contentElement->setBoundaries(
-          parentX + 35,
-          parentY + 140,
-          parentWidth - 85,
-          parentHeight - 73 - 105);  // CUSTOM MODIFICATION
-      this->m_contentElement->invalidate();
-    }
-  }
+                      u16 parentHeight) override;
 
   virtual Element* requestFocus(Element* oldFocus,
-                                FocusDirection direction) override
-  {
-    if (this->m_contentElement != nullptr)
-      return this->m_contentElement->requestFocus(oldFocus, direction);
-    else
-      return nullptr;
-  }
+                                FocusDirection direction) override;
 
   /**
    * @brief Sets the content of the frame
    *
    * @param content Element
    */
-  virtual void setContent(Element* content) final
-  {
-    if (this->m_contentElement != nullptr)
-      delete this->m_contentElement;
-
-    this->m_contentElement = content;
-
-    if (content != nullptr) {
-      this->m_contentElement->setParent(this);
-      this->invalidate();
-    }
-  }
+  virtual void setContent(Element* content) final;
 
 protected:
   Element* m_contentElement = nullptr;
@@ -473,21 +300,12 @@ public:
   }
   virtual ~DebugRectangle() {}
 
-  virtual void draw(gfx::Renderer* renderer) override
-  {
-    renderer->drawRect(this->getX(),
-                       this->getY(),
-                       this->getWidth(),
-                       this->getHeight(),
-                       a(this->m_color));
-  }
+  virtual void draw(gfx::Renderer* renderer) override;
 
   virtual void layout(u16 parentX,
                       u16 parentY,
                       u16 parentWidth,
-                      u16 parentHeight) override
-  {
-  }
+                      u16 parentHeight) override {}
 
 private:
   gfx::Color m_color;
@@ -516,45 +334,7 @@ public:
   }
   virtual ~ListItem() {}
 
-  virtual void draw(gfx::Renderer* renderer) override
-  {
-    if (this->m_valueWidth == 0) {
-      auto [width, height] =
-          renderer->drawString(this->m_value.c_str(),
-                               false,
-                               0,
-                               0,
-                               20,
-                               tsl::style::color::ColorTransparent);
-      this->m_valueWidth = width;
-    }
-
-    renderer->drawRect(this->getX(),
-                       this->getY(),
-                       this->getWidth(),
-                       1,
-                       a({0x4, 0x4, 0x4, 0xF}));
-    renderer->drawRect(this->getX(),
-                       this->getY() + this->getHeight(),
-                       this->getWidth(),
-                       1,
-                       a({0x0, 0x0, 0x0, 0xD}));
-
-    renderer->drawString(this->m_text.c_str(),
-                         false,
-                         this->getX() + 20,
-                         this->getY() + 45,
-                         23,
-                         a(defaultTextColor));
-
-    renderer->drawString(
-        this->m_value.c_str(),
-        false,
-        this->getX() + this->getWidth() - this->m_valueWidth - 20,
-        this->getY() + 45,
-        20,
-        this->m_faint ? a({0x6, 0x6, 0x6, 0xF}) : a({0x5, 0xC, 0xA, 0xF}));
-  }
+  virtual void draw(gfx::Renderer* renderer) override;
 
   virtual void layout(u16 parentX,
                       u16 parentY,
@@ -564,17 +344,14 @@ public:
   }
 
   virtual Element* requestFocus(Element* oldFocus,
-                                FocusDirection direction) override
-  {
-    return this;
-  }
+                                FocusDirection direction) override;
 
   /**
    * @brief Sets the left hand description text of the list item
    *
    * @param text Text
    */
-  virtual inline void setText(std::string text) final { this->m_text = text; }
+  virtual inline void setText(std::string text) final;
 
   /**
    * @brief Sets the right hand value text of the list item
@@ -582,12 +359,7 @@ public:
    * @param value Text
    * @param faint Should the text be drawn in a glowing green or a faint gray
    */
-  virtual inline void setValue(std::string value, bool faint = false)
-  {
-    this->m_value = value;
-    this->m_faint = faint;
-    this->m_valueWidth = 0;
-  }
+  virtual inline void setValue(std::string value, bool faint = false);
 
 protected:
   std::string m_text;
@@ -616,52 +388,25 @@ public:
   ToggleListItem(std::string text,
                  bool initialState,
                  std::string onValue = "On",
-                 std::string offValue = "Off")
-      : ListItem(text)
-      , m_state(initialState)
-      , m_onValue(onValue)
-      , m_offValue(offValue)
-  {
-    this->setState(this->m_state);
-  }
+                 std::string offValue = "Off");
 
   virtual ~ToggleListItem() {}
 
-  virtual bool onClick(u64 keys)
-  {
-    if (keys & KEY_A) {
-      this->m_state = !this->m_state;
-
-      this->setState(this->m_state);
-      this->m_stateChangedListener(this->m_state);
-
-      return true;
-    }
-
-    return false;
-  }
+  virtual bool onClick(u64 keys);
 
   /**
    * @brief Gets the current state of the toggle
    *
    * @return State
    */
-  virtual inline bool getState() { return this->m_state; }
+  virtual inline bool getState();
 
   /**
    * @brief Sets the current state of the toggle. Updates the Value
    *
    * @param state State
    */
-  virtual void setState(bool state)
-  {
-    this->m_state = state;
-
-    if (state)
-      this->setValue(this->m_onValue, false);
-    else
-      this->setValue(this->m_offValue, true);
-  }
+  virtual void setState(bool state);
 
   /**
    * @brief Adds a listener that gets called whenever the state of the toggle
@@ -670,10 +415,7 @@ public:
    * @param stateChangedListener Listener with the current state passed in as
    * parameter
    */
-  void setStateChangedListener(std::function<void(bool)> stateChangedListener)
-  {
-    this->m_stateChangedListener = stateChangedListener;
-  }
+  void setStateChangedListener(std::function<void(bool)> stateChangedListener);
 
 protected:
   bool m_state = true;
@@ -700,40 +442,14 @@ public:
       , m_entriesShown(entriesShown)
   {
   }
-  virtual ~List()
-  {
-    for (auto& item : this->m_items)
-      delete item.element;
-  }
+  virtual ~List();
 
-  virtual void draw(gfx::Renderer* renderer) override
-  {
-    u16 i = 0;
-    for (auto& entry : this->m_items) {
-      if (i >= this->m_offset && i < this->m_offset + this->m_entriesShown) {
-        entry.element->frame(renderer);
-      }
-      i++;
-    }
-  }
+  virtual void draw(gfx::Renderer* renderer) override;
 
   virtual void layout(u16 parentX,
                       u16 parentY,
                       u16 parentWidth,
-                      u16 parentHeight) override
-  {
-    u16 y = this->getY();
-    u16 i = 0;
-    for (auto& entry : this->m_items) {
-      if (i >= this->m_offset && i < this->m_offset + this->m_entriesShown) {
-        entry.element->setBoundaries(
-            this->getX(), y, this->getWidth(), entry.height);
-        entry.element->invalidate();
-        y += entry.height;
-      }
-      i++;
-    }
-  }
+                      u16 parentHeight) override;
 
   /**
    * @brief Adds a new item to the list
@@ -742,79 +458,15 @@ public:
    * @param height Height of the element. Don't set this parameter for libtesla
    * to try and figure out the size based on the type
    */
-  virtual void addItem(Element* element, u16 height = 0) final
-  {
-    if (height == 0) {
-      if (dynamic_cast<ListItem*>(element) != nullptr)
-        height = tsl::style::ListItemDefaultHeight;
-    }
-
-    if (element != nullptr && height > 0) {
-      element->setParent(this);
-      this->m_items.push_back({element, height});
-      this->invalidate();
-    }
-
-    if (this->m_items.size() == 1)
-      this->requestFocus(nullptr, FocusDirection::None);
-  }
+  virtual void addItem(Element* element, u16 height = 0) final;
 
   /**
    * @brief Removes all children from the list
    */
-  virtual void clear() final
-  {
-    for (auto& item : this->m_items)
-      delete item.element;
-
-    this->m_items.clear();
-  }
+  virtual void clear() final;
 
   virtual Element* requestFocus(Element* oldFocus,
-                                FocusDirection direction) override
-  {
-    if (this->m_items.size() == 0)
-      return nullptr;
-
-    auto it = std::find(this->m_items.begin(), this->m_items.end(), oldFocus);
-
-    if (it == this->m_items.end() || direction == FocusDirection::None)
-      return this->m_items[0].element;
-
-    if (direction == FocusDirection::Up) {
-      if (it == this->m_items.begin())
-        return this->m_items[0].element;
-      else {
-        // old focus on the second item, and has offset
-        if (oldFocus == (this->m_items.begin() + this->m_offset + 1)->element) {
-          if (this->m_offset > 0) {
-            this->m_offset--;
-            this->invalidate();
-          }
-        }
-        return (it - 1)->element;
-      }
-    } else if (direction == FocusDirection::Down) {
-      if (it == (this->m_items.end() - 1)) {
-        return this->m_items[this->m_items.size() - 1].element;
-      } else {
-        // old focus on second to last item, and has more items hidden
-        if (oldFocus
-            == (this->m_items.begin() + this->m_offset + this->m_entriesShown
-                - 2)
-                   ->element)
-        {
-          if (this->m_items.size() > this->m_offset + this->m_entriesShown) {
-            this->m_offset++;
-            this->invalidate();
-          }
-        }
-        return (it + 1)->element;
-      }
-    }
-
-    return it->element;
-  }
+                                FocusDirection direction) override;
 
 protected:
   struct ListEntry
@@ -822,7 +474,7 @@ protected:
     Element* element;
     u16 height;
 
-    bool operator==(Element* other) { return this->element == other; }
+    bool operator==(Element* other);
   };
 
   std::vector<ListEntry> m_items;
@@ -851,30 +503,21 @@ public:
                    renderFunc)
       : Element()
       , m_renderFunc(renderFunc)
-  {
-  }
+{
+}
   virtual ~CustomDrawer() {}
 
-  virtual void draw(gfx::Renderer* renderer) override
-  {
-    this->m_renderFunc(renderer,
-                       this->getX(),
-                       this->getY(),
-                       this->getWidth(),
-                       this->getHeight());
-  }
+  virtual void draw(gfx::Renderer* renderer) override;
 
   virtual void layout(u16 parentX,
                       u16 parentY,
                       u16 parentWidth,
-                      u16 parentHeight) override
-  {
-  }
+                      u16 parentHeight) override {}
 
 private:
   std::function<void(gfx::Renderer*, u16 x, u16 y, u16 w, u16 h)> m_renderFunc;
 };
 
-}
+}  // namespace nikola::tsl::elm
 
 #endif  // LIBNIKOLA_ELM_HPP
