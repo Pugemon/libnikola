@@ -49,22 +49,20 @@
 #define touchInput &touchPos
 #define JoystickPosition HidAnalogStickState
 
-
-#include "tesla/cfg.hpp"
-#include "tesla/style.hpp"
-#include "tesla/impl.hpp"
-#include "tesla/hlp.hpp"
-#include "tesla/gfx.hpp"
-#include "tesla/elm.hpp"
-
-#include <switch/types.h>
 #include <list>
 #include <stack>
 
+#include <switch/types.h>
+
+#include "tesla/cfg.hpp"
+#include "tesla/elm.hpp"
+#include "tesla/gfx.hpp"
+#include "tesla/hlp.hpp"
+#include "tesla/impl.hpp"
+#include "tesla/style.hpp"
+
 namespace nikola
 {
-
-
 
 // Define this makro before including tesla.hpp in your main file. If you intend
 // to use the tesla.hpp header in more than one source file, only define it
@@ -98,7 +96,8 @@ bool deactivateOriginalFooter = false;
 namespace tsl
 {
 
-template<typename TOverlay, impl::LaunchFlags launchFlags = impl::LaunchFlags::CloseOnExit>
+template<typename TOverlay,
+         impl::LaunchFlags launchFlags = impl::LaunchFlags::CloseOnExit>
 int loop(int argc, char** argv);
 
 /**
@@ -451,7 +450,6 @@ void goBack();
 
 void setNextOverlay(std::string ovlPath, std::string args);
 
-
 /**
  * @brief libtesla's main function
  * @note Call it directly from main passing in argc and argv and returning it
@@ -533,4 +531,4 @@ void __appExit(void)
 }
 
 #endif
-} // namespace nikola
+}  // namespace nikola

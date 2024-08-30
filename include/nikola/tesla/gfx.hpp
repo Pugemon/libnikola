@@ -14,7 +14,8 @@
 
 #include "../stb_truetype.h"
 
-namespace nikola::tsl {
+namespace nikola::tsl
+{
 class Overlay;
 }
 
@@ -36,6 +37,7 @@ struct Color
     {
       u16 r : 4, g : 4, b : 4, a : 4;
     } NX_PACKED;
+
     u16 rgba;
   };
 
@@ -43,6 +45,7 @@ struct Color
       : rgba(raw)
   {
   }
+
   inline Color(u8 r, u8 g, u8 b, u8 a)
       : r(r)
       , g(g)
@@ -228,7 +231,8 @@ private:
    * @brief Provides access to the single instance of the Renderer.
    *
    * This method returns a reference to the sole instance of the Renderer.
-   * If the instance does not yet exist, it will be created at the time of the first call.
+   * If the instance does not yet exist, it will be created at the time of the
+   * first call.
    *
    * @return Renderer& Reference to the single instance of the Renderer.
    */
@@ -357,16 +361,15 @@ private:
    * @param fontSize Font size
    */
   void drawGlyph(s32 codepoint,
-                        s32 x,
-                        s32 y,
-                        Color color,
-                        stbtt_fontinfo* font,
-                        float fontSize);
+                 s32 x,
+                 s32 y,
+                 Color color,
+                 stbtt_fontinfo* font,
+                 float fontSize);
 
   void setLayerPosImpl(u32 x, u32 y);
 };
 
-}
-
+}  // namespace nikola::tsl::gfx
 
 #endif  // LIBNIKOLA_GFX_HPP

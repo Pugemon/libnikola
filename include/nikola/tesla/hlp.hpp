@@ -32,7 +32,6 @@ void doWithSmSession(std::function<void()> f);
  */
 Result hidsysEnableAppletToGetInput(bool enable, u64 aruid);
 
-
 Result viAddToLayerStack(ViLayer* layer, ViLayerStack stack);
 
 /**

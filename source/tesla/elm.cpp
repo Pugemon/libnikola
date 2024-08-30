@@ -2,11 +2,11 @@
 // Created by pugemon on 29.08.24.
 //
 
-#include "nikola/tesla/elm.hpp"
-#include "nikola/tesla.hpp"
-
 #include <cmath>
 
+#include "nikola/tesla/elm.hpp"
+
+#include "nikola/tesla.hpp"
 
 constexpr float M_PI = 3.14159265358979323846;
 

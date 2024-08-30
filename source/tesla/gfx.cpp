@@ -1,13 +1,13 @@
 //
 // Created by pugemon on 29.08.24.
 //
-#include "nikola/tesla/gfx.hpp"
-#include "nikola/tesla/cfg.hpp"
-#include "nikola/tesla/hlp.hpp"
-#include "nikola/tesla.hpp"
-
 #include <cmath>
 
+#include "nikola/tesla/gfx.hpp"
+
+#include "nikola/tesla.hpp"
+#include "nikola/tesla/cfg.hpp"
+#include "nikola/tesla/hlp.hpp"
 
 #define ASSERT_FATAL(x) \
   if (Result res = x; R_FAILED(res)) \
@@ -63,9 +63,9 @@ Color RGB888(std::string hexColor, std::string defaultHexColor)
 
 Color Renderer::a(const Color& c)
 {
-  return (c.rgba & 0x0FFF)
-         | (static_cast<u8>(c.a * Renderer::s_opacity) << 12);
+  return (c.rgba & 0x0FFF) | (static_cast<u8>(c.a * Renderer::s_opacity) << 12);
 }
+
 void Renderer::enableScissoring(u16 x, u16 y, u16 w, u16 h)
 {
   this->m_scissoring = true;
@@ -75,8 +75,12 @@ void Renderer::enableScissoring(u16 x, u16 y, u16 w, u16 h)
   this->m_scissorBounds[2] = w;
   this->m_scissorBounds[3] = h;
 }
+
 void Renderer::disableScissoring()
-{ this->m_scissoring = false; }
+{
+  this->m_scissoring = false;
+}
+
 void Renderer::setPixel(s16 x, s16 y, Color color)
 {
   if (x < 0 || y < 0 || x >= cfg::FramebufferWidth
@@ -86,12 +90,14 @@ void Renderer::setPixel(s16 x, s16 y, Color color)
   static_cast<Color*>(
       this->getCurrentFramebuffer())[this->getPixelOffset(x, y)] = color;
 }
+
 u8 Renderer::blendColor(u8 src, u8 dst, u8 alpha)
 {
   u8 oneMinusAlpha = 0x0F - alpha;
 
   return (dst * alpha + src * oneMinusAlpha) / float(0xF);
 }
+
 void Renderer::setPixelBlendSrc(s16 x, s16 y, Color color)
 {
   if (x < 0 || y < 0 || x >= cfg::FramebufferWidth
@@ -110,6 +116,7 @@ void Renderer::setPixelBlendSrc(s16 x, s16 y, Color color)
 
   this->setPixel(x, y, end);
 }
+
 void Renderer::setPixelBlendDst(s16 x, s16 y, Color color)
 {
   if (x < 0 || y < 0 || x >= cfg::FramebufferWidth
@@ -128,12 +135,14 @@ void Renderer::setPixelBlendDst(s16 x, s16 y, Color color)
 
   this->setPixel(x, y, end);
 }
+
 void Renderer::drawRect(s16 x, s16 y, s16 w, s16 h, Color color)
 {
   for (s16 x1 = x; x1 < (x + w); x1++)
     for (s16 y1 = y; y1 < (y + h); y1++)
       this->setPixelBlendDst(x1, y1, color);
 }
+
 void Renderer::drawEmptyRect(s16 x, s16 y, s16 w, s16 h, Color color)
 {
   if (x < 0 || y < 0 || x >= cfg::FramebufferWidth
@@ -145,6 +154,7 @@ void Renderer::drawEmptyRect(s16 x, s16 y, s16 w, s16 h, Color color)
       if (y1 == y || x1 == x || y1 == y + h || x1 == x + w)
         this->setPixelBlendDst(x1, y1, color);
 }
+
 void Renderer::drawLine(s16 x0, s16 y0, s16 x1, s16 y1, Color color)
 {
   if ((x0 == x1) && (y0 == y1)) {
@@ -189,6 +199,7 @@ void Renderer::drawLine(s16 x0, s16 y0, s16 x1, s16 y1, Color color)
       }
   }
 }
+
 void Renderer::drawDashedLine(
     s16 x0, s16 y0, s16 x1, s16 y1, s16 line_width, Color color)
 {
@@ -238,6 +249,7 @@ void Renderer::drawDashedLine(
     }
   }
 }
+
 void Renderer::drawBitmap(s32 x, s32 y, s32 w, s32 h, const u8* bmp)
 {
   for (s32 y1 = 0; y1 < h; y1++) {
@@ -251,14 +263,19 @@ void Renderer::drawBitmap(s32 x, s32 y, s32 w, s32 h, const u8* bmp)
     }
   }
 }
+
 void Renderer::fillScreen(Color color)
 {
   std::fill_n(static_cast<Color*>(this->getCurrentFramebuffer()),
               this->getFramebufferSize() / sizeof(Color),
               color);
 }
+
 void Renderer::clearScreen()
-{ this->fillScreen({0x00, 0x00, 0x00, 0x00}); }
+{
+  this->fillScreen({0x00, 0x00, 0x00, 0x00});
+}
+
 void Renderer::setLayerPos(u32 x, u32 y)
 {
   float ratio = 1.5;
@@ -269,8 +286,12 @@ void Renderer::setLayerPos(u32 x, u32 y)
   }
   setLayerPosImpl(x, y);
 }
+
 Renderer& Renderer::getRenderer()
-{ return get(); }
+{
+  return get();
+}
+
 std::pair<u32, u32> Renderer::drawString(const char* string,
                                          bool monospace,
                                          u32 x,
@@ -306,8 +327,7 @@ std::pair<u32, u32> Renderer::drawString(const char* string,
 
     float currFontSize = stbtt_ScaleForPixelHeight(currFont, fontSize);
     currX += currFontSize
-             * stbtt_GetCodepointKernAdvance(
-        currFont, prevCharacter, currCharacter);
+        * stbtt_GetCodepointKernAdvance(currFont, prevCharacter, currCharacter);
 
     int bounds[4] = {0};
     stbtt_GetCodepointBitmapBoxSubpixel(currFont,
@@ -350,38 +370,57 @@ std::pair<u32, u32> Renderer::drawString(const char* string,
 
   return {maxX - x, currY - y};
 }
+
 Renderer& Renderer::get()
 {
   static Renderer renderer;
 
   return renderer;
 }
+
 void Renderer::setOpacity(float opacity)
 {
   opacity = std::clamp(opacity, 0.0F, 1.0F);
 
   Renderer::s_opacity = opacity;
 }
+
 void* Renderer::getCurrentFramebuffer()
-{ return this->m_currentFramebuffer; }
+{
+  return this->m_currentFramebuffer;
+}
+
 void* Renderer::getNextFramebuffer()
 {
   return static_cast<u8*>(this->m_framebuffer.buf)
-         + this->getNextFramebufferSlot() * this->getFramebufferSize();
+      + this->getNextFramebufferSlot() * this->getFramebufferSize();
 }
+
 size_t Renderer::getFramebufferSize()
-{ return this->m_framebuffer.fb_size; }
+{
+  return this->m_framebuffer.fb_size;
+}
+
 size_t Renderer::getFramebufferCount()
-{ return this->m_framebuffer.num_fbs; }
+{
+  return this->m_framebuffer.num_fbs;
+}
+
 u8 Renderer::getCurrentFramebufferSlot()
-{ return this->m_window.cur_slot; }
+{
+  return this->m_window.cur_slot;
+}
+
 u8 Renderer::getNextFramebufferSlot()
 {
-  return (this->getCurrentFramebufferSlot() + 1)
-         % this->getFramebufferCount();
+  return (this->getCurrentFramebufferSlot() + 1) % this->getFramebufferCount();
 }
+
 void Renderer::waitForVSync()
-{ eventWait(&this->m_vsyncEvent, UINT64_MAX); }
+{
+  eventWait(&this->m_vsyncEvent, UINT64_MAX);
+}
+
 const u32 Renderer::getPixelOffset(u32 x, u32 y)
 {
   if (this->m_scissoring) {
@@ -392,14 +431,15 @@ const u32 Renderer::getPixelOffset(u32 x, u32 y)
   }
 
   u32 tmpPos = ((y & 127) / 16) + (x / 32 * 8)
-               + ((y / 16 / 8) * (((cfg::FramebufferWidth / 2) / 16 * 8)));
+      + ((y / 16 / 8) * (((cfg::FramebufferWidth / 2) / 16 * 8)));
   tmpPos *= 16 * 16 * 4;
 
   tmpPos += ((y % 16) / 8) * 512 + ((x % 32) / 16) * 256 + ((y % 8) / 2) * 64
-            + ((x % 16) / 8) * 32 + (y % 2) * 16 + (x % 8) * 2;
+      + ((x % 16) / 8) * 32 + (y % 2) * 16 + (x % 8) * 2;
 
   return tmpPos / 2;
 }
+
 void Renderer::init()
 {
   cfg::LayerPosX = 0;
@@ -407,9 +447,9 @@ void Renderer::init()
   cfg::FramebufferWidth = framebufferWidth;
   cfg::FramebufferHeight = framebufferHeight;
   cfg::LayerWidth = cfg::ScreenWidth
-                    * (float(cfg::FramebufferWidth) / float(cfg::LayerMaxWidth));
+      * (float(cfg::FramebufferWidth) / float(cfg::LayerMaxWidth));
   cfg::LayerHeight = cfg::ScreenHeight
-                     * (float(cfg::FramebufferHeight) / float(cfg::LayerMaxHeight));
+      * (float(cfg::FramebufferHeight) / float(cfg::LayerMaxHeight));
 
   if (this->m_initialized)
     return;
@@ -434,27 +474,25 @@ void Renderer::init()
             && layerZ > 0)
           ASSERT_FATAL(viSetLayerZ(&this->m_layer, layerZ));
 
-        ASSERT_FATAL(hlp::viAddToLayerStack(&this->m_layer,
-                                                 ViLayerStack_Default));
-        ASSERT_FATAL(hlp::viAddToLayerStack(&this->m_layer,
-                                                 ViLayerStack_Screenshot));
-        ASSERT_FATAL(hlp::viAddToLayerStack(&this->m_layer,
-                                                 ViLayerStack_Recording));
-        ASSERT_FATAL(hlp::viAddToLayerStack(&this->m_layer,
-                                                 ViLayerStack_Arbitrary));
-        ASSERT_FATAL(hlp::viAddToLayerStack(&this->m_layer,
-                                                 ViLayerStack_LastFrame));
         ASSERT_FATAL(
-            hlp::viAddToLayerStack(&this->m_layer, ViLayerStack_Null));
-        ASSERT_FATAL(hlp::viAddToLayerStack(
-            &this->m_layer, ViLayerStack_ApplicationForDebug));
+            hlp::viAddToLayerStack(&this->m_layer, ViLayerStack_Default));
         ASSERT_FATAL(
-            hlp::viAddToLayerStack(&this->m_layer, ViLayerStack_Lcd));
+            hlp::viAddToLayerStack(&this->m_layer, ViLayerStack_Screenshot));
+        ASSERT_FATAL(
+            hlp::viAddToLayerStack(&this->m_layer, ViLayerStack_Recording));
+        ASSERT_FATAL(
+            hlp::viAddToLayerStack(&this->m_layer, ViLayerStack_Arbitrary));
+        ASSERT_FATAL(
+            hlp::viAddToLayerStack(&this->m_layer, ViLayerStack_LastFrame));
+        ASSERT_FATAL(hlp::viAddToLayerStack(&this->m_layer, ViLayerStack_Null));
+        ASSERT_FATAL(hlp::viAddToLayerStack(&this->m_layer,
+                                            ViLayerStack_ApplicationForDebug));
+        ASSERT_FATAL(hlp::viAddToLayerStack(&this->m_layer, ViLayerStack_Lcd));
 
-        ASSERT_FATAL(viSetLayerSize(
-            &this->m_layer, cfg::LayerWidth, cfg::LayerHeight));
-        ASSERT_FATAL(viSetLayerPosition(
-            &this->m_layer, cfg::LayerPosX, cfg::LayerPosY));
+        ASSERT_FATAL(
+            viSetLayerSize(&this->m_layer, cfg::LayerWidth, cfg::LayerHeight));
+        ASSERT_FATAL(
+            viSetLayerPosition(&this->m_layer, cfg::LayerPosX, cfg::LayerPosY));
         ASSERT_FATAL(nwindowCreateFromLayer(&this->m_window, &this->m_layer));
         ASSERT_FATAL(framebufferCreate(&this->m_framebuffer,
                                        &this->m_window,
@@ -467,6 +505,7 @@ void Renderer::init()
 
   this->m_initialized = true;
 }
+
 void Renderer::exit()
 {
   if (!this->m_initialized)
@@ -479,6 +518,7 @@ void Renderer::exit()
   eventClose(&this->m_vsyncEvent);
   viExit();
 }
+
 Result Renderer::initFonts()
 {
   Result res;
@@ -486,14 +526,13 @@ Result Renderer::initFonts()
   static PlFontData stdFontData, extFontData;
 
   // Nintendo's default font
-  if (R_FAILED(res = plGetSharedFontByType(&stdFontData,
-                                           PlSharedFontType_Standard)))
+  if (R_FAILED(
+          res = plGetSharedFontByType(&stdFontData, PlSharedFontType_Standard)))
     return res;
 
   u8* fontBuffer = reinterpret_cast<u8*>(stdFontData.address);
-  stbtt_InitFont(&this->m_stdFont,
-                 fontBuffer,
-                 stbtt_GetFontOffsetForIndex(fontBuffer, 0));
+  stbtt_InitFont(
+      &this->m_stdFont, fontBuffer, stbtt_GetFontOffsetForIndex(fontBuffer, 0));
 
   // Nintendo's extended font containing a bunch of icons
   if (R_FAILED(res = plGetSharedFontByType(&extFontData,
@@ -501,17 +540,17 @@ Result Renderer::initFonts()
     return res;
 
   fontBuffer = reinterpret_cast<u8*>(extFontData.address);
-  stbtt_InitFont(&this->m_extFont,
-                 fontBuffer,
-                 stbtt_GetFontOffsetForIndex(fontBuffer, 0));
+  stbtt_InitFont(
+      &this->m_extFont, fontBuffer, stbtt_GetFontOffsetForIndex(fontBuffer, 0));
 
   return res;
 }
+
 void Renderer::startFrame()
 {
-  this->m_currentFramebuffer =
-      framebufferBegin(&this->m_framebuffer, nullptr);
+  this->m_currentFramebuffer = framebufferBegin(&this->m_framebuffer, nullptr);
 }
+
 void Renderer::endFrame()
 {
   std::memcpy(this->getNextFramebuffer(),
@@ -523,6 +562,7 @@ void Renderer::endFrame()
 
   this->m_currentFramebuffer = nullptr;
 }
+
 void Renderer::drawGlyph(s32 codepoint,
                          s32 x,
                          s32 y,
@@ -549,6 +589,7 @@ void Renderer::drawGlyph(s32 codepoint,
 
   std::free(glyphBmp);
 }
+
 void Renderer::setLayerPosImpl(u32 x, u32 y)
 {
   cfg::LayerPosX = x;
@@ -556,4 +597,4 @@ void Renderer::setLayerPosImpl(u32 x, u32 y)
   ASSERT_FATAL(
       viSetLayerPosition(&this->m_layer, cfg::LayerPosX, cfg::LayerPosY));
 }
-} // namespace nikola::tsl::gfx
+}  // namespace nikola::tsl::gfx

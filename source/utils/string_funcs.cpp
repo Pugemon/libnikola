@@ -1,8 +1,10 @@
 //
 // Created by pugemon on 28.08.24.
 //
-#include "nikola/utils/string_funcs.hpp"
 #include <sstream>
+
+#include "nikola/utils/string_funcs.hpp"
+
 #include <sys/stat.h>
 
 namespace nikola::utils
@@ -141,4 +143,4 @@ std::vector<std::string> stringToList(const std::string& str)
   return result;
 }
 
-}
+}  // namespace nikola::utils

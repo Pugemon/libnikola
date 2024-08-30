@@ -22,6 +22,6 @@ extern u16 LayerPosY;  ///< Y position of the Tesla layer
 extern u16 FramebufferWidth;  ///< Width of the framebuffer
 extern u16 FramebufferHeight;  ///< Height of the framebuffer
 
-}
+}  // namespace nikola::tsl::cfg
 
 #endif  // LIBNIKOLA_CFG_HPP

@@ -18,10 +18,10 @@
  ********************************************************************************/
 
 #pragma once
-#include <cstring>    // For std::string, strlen(), etc.
-#include <map>        // For std::map
-#include <string>     // For std::string
-#include <vector>     // For std::vector
+#include <cstring>  // For std::string, strlen(), etc.
+#include <map>  // For std::map
+#include <string>  // For std::string
+#include <vector>  // For std::vector
 
 /**
  * @brief Splits a string into a vector of substrings using a specified

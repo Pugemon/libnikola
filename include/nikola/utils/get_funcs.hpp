@@ -127,4 +127,4 @@ std::vector<std::string> getFilesListByWildcard(const std::string& pathPattern);
 std::vector<std::string> getFilesListByWildcards(
     const std::string& pathPattern);
 
-}  // namespace nikola::utils::get
+}  // namespace nikola::utils

@@ -33,7 +33,6 @@ elm::Element* Gui::getFocusedElement()
   return this->m_focusedElement;
 }
 
-
 void Gui::requestFocus(elm::Element* element, FocusDirection direction)
 {
   elm::Element* oldFocus = this->m_focusedElement;
@@ -116,16 +115,24 @@ Overlay* const Overlay::get()
 }
 
 void Overlay::initScreen()
-{ gfx::Renderer::get().init(); }
+{
+  gfx::Renderer::get().init();
+}
 
 void Overlay::exitScreen()
-{ gfx::Renderer::get().exit(); }
+{
+  gfx::Renderer::get().exit();
+}
 
 bool Overlay::shouldHide()
-{ return this->m_shouldHide; }
+{
+  return this->m_shouldHide;
+}
 
 bool Overlay::shouldClose()
-{ return this->m_shouldClose; }
+{
+  return this->m_shouldClose;
+}
 
 void Overlay::animationLoop()
 {
@@ -190,18 +197,16 @@ void Overlay::handleInput(u64 keysDown,
     return;
 
   handled = handled
-            | currentGui->handleInput(
-      keysDown, keysHeld, touchPos, joyStickPosLeft, joyStickPosRight);
+      | currentGui->handleInput(
+          keysDown, keysHeld, touchPos, joyStickPosLeft, joyStickPosRight);
 
   if (!handled) {
     if (keysDown & KEY_UP)
       currentGui->requestFocus(currentFocus->getParent(), FocusDirection::Up);
     else if (keysDown & KEY_DOWN)
-      currentGui->requestFocus(currentFocus->getParent(),
-                               FocusDirection::Down);
+      currentGui->requestFocus(currentFocus->getParent(), FocusDirection::Down);
     else if (keysDown & KEY_LEFT)
-      currentGui->requestFocus(currentFocus->getParent(),
-                               FocusDirection::Left);
+      currentGui->requestFocus(currentFocus->getParent(), FocusDirection::Left);
     else if (keysDown & KEY_RIGHT)
       currentGui->requestFocus(currentFocus->getParent(),
                                FocusDirection::Right);
@@ -406,4 +411,4 @@ int loop(int argc, char** argv)
   return 0;
 }
 
-}
+}  // namespace nikola::tsl

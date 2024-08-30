@@ -138,6 +138,7 @@ getParsedDataFromIniFile(const std::string& configIniPath)
   fclose(file);
   return sections;
 }
+
 std::string parseValueFromIniSection(const std::string& filePath,
                                      const std::string& sectionName,
                                      const std::string& keyName)
@@ -179,6 +180,7 @@ std::string parseValueFromIniSection(const std::string& filePath,
 
   return value;
 }
+
 [[maybe_unused]] std::string parseValueFromIniSectionF(
     FILE*& file,
     const std::string& filePath,
@@ -222,6 +224,7 @@ std::string parseValueFromIniSection(const std::string& filePath,
 
   return value;
 }
+
 [[maybe_unused]] void cleanIniFormatting(const std::string& filePath)
 {
   FILE* inputFile = fopen(filePath.c_str(), "r");
@@ -266,6 +269,7 @@ std::string parseValueFromIniSection(const std::string& filePath,
   remove(filePath.c_str());
   rename(tempPath.c_str(), filePath.c_str());
 }
+
 void setIniFile(const std::string& fileToEdit,
                 const std::string& desiredSection,
                 const std::string& desiredKey,
@@ -411,6 +415,7 @@ void setIniFile(const std::string& fileToEdit,
   fprintf(configFile, "%s", updatedContent.c_str());
   fclose(configFile);
 }
+
 [[maybe_unused]] void setIniFileValue(const std::string& fileToEdit,
                                       const std::string& desiredSection,
                                       const std::string& desiredKey,
@@ -419,6 +424,7 @@ void setIniFile(const std::string& fileToEdit,
   setIniFile(fileToEdit, desiredSection, desiredKey, desiredValue, "");
   // cleanIniFormatting(fileToEdit);
 }
+
 [[maybe_unused]] void setIniFileKey(const std::string& fileToEdit,
                                     const std::string& desiredSection,
                                     const std::string& desiredKey,
@@ -427,6 +433,7 @@ void setIniFile(const std::string& fileToEdit,
   setIniFile(fileToEdit, desiredSection, desiredKey, "", desiredNewKey);
   // cleanIniFormatting(fileToEdit);
 }
+
 [[maybe_unused]] void addIniSection(const char* filePath,
                                     const char* sectionName)
 {
@@ -484,6 +491,7 @@ void setIniFile(const std::string& fileToEdit,
   // std::cout << "Section '" << sectionName << "' added to the INI file." <<
   // std::endl;
 }
+
 [[maybe_unused]] void renameIniSection(const std::string& filePath,
                                        const std::string& currentSectionName,
                                        const std::string& newSectionName)
@@ -548,6 +556,7 @@ void setIniFile(const std::string& fileToEdit,
     // Failed to rename the temp file, handle the error accordingly
   }
 }
+
 [[maybe_unused]] void removeIniSection(const std::string& filePath,
                                        const std::string& sectionName)
 {
@@ -609,4 +618,4 @@ void setIniFile(const std::string& fileToEdit,
     // Failed to rename the temp file, handle the error accordingly
   }
 }
-}
+}  // namespace nikola::utils

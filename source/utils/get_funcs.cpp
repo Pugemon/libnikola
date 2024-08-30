@@ -1,14 +1,15 @@
 //
 // Created by pugemon on 27.08.24.
 //
+#include <algorithm>
+#include <cstdio>
+#include <string>
+
 #include "nikola/utils/get_funcs.hpp"
 
 #include <dirent.h>
 #include <fnmatch.h>
-#include <cstdio>
 #include <sys/stat.h>
-#include <algorithm>
-#include <string>
 
 #include "nikola/utils/string_funcs.hpp"
 
@@ -310,4 +311,4 @@ std::vector<std::string> getFilesListByWildcards(const std::string& pathPattern)
   return fileList;
 }
 
-}
+}  // namespace nikola::utils

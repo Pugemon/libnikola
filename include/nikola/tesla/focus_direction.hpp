@@ -13,12 +13,13 @@ namespace nikola::tsl
  */
 enum class FocusDirection
 {
-  None,  ///< Focus was placed on the element programmatically without user input
+  None,  ///< Focus was placed on the element programmatically without user
+         ///< input
   Up,  ///< Focus moved upwards
   Down,  ///< Focus moved downwards
   Left,  ///< Focus moved from left to right
   Right  ///< Focus moved from right to left
 };
-}
+}  // namespace nikola::tsl
 
 #endif  // LIBNIKOLA_FOCUS_DIRECTION_HPP

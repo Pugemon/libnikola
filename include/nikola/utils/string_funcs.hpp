@@ -23,7 +23,6 @@
 #include <string>
 #include <vector>
 
-
 namespace nikola::utils
 {
 
@@ -159,4 +158,4 @@ bool isFileOrDirectory(const std::string& path);
  * @return A vector of strings containing the split values.
  */
 std::vector<std::string> stringToList(const std::string& str);
-}
+}  // namespace nikola::utils

@@ -2,10 +2,11 @@
 // Created by pugemon on 28.08.24.
 //
 
-#include "nikola/tesla/hlp.hpp"
-#include "nikola/tesla.hpp"
-
 #include <functional>
+
+#include "nikola/tesla/hlp.hpp"
+
+#include "nikola/tesla.hpp"
 
 namespace nikola::tsl::hlp
 {
@@ -57,6 +58,7 @@ void requestForeground(bool enabled)
 
   hidsysEnableAppletToGetInput(true, 0);
 }
+
 std::vector<std::string> split(const std::string& str, char delim)
 {
   std::vector<std::string> out;
@@ -72,6 +74,7 @@ std::vector<std::string> split(const std::string& str, char delim)
 
   return out;
 }
+
 u64 stringToKeyCode(std::string& value)
 {
   if (strcasecmp(value.c_str(), "A") == 0)
@@ -136,6 +139,6 @@ IniData parseIni(const std::string& str)
 
   return iniData;
 }
-}
+}  // namespace ini
 
-}
+}  // namespace nikola::tsl::hlp

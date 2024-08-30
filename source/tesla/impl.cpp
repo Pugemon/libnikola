@@ -3,7 +3,9 @@
 //
 
 #include "nikola/tesla/impl.hpp"
+
 #include <switch/kernel/svc.h>
+
 #include "nikola/tesla.hpp"
 
 namespace nikola::tsl::impl
@@ -55,6 +57,7 @@ void homeButtonDetector(void* args)
     }
   }
 }
+
 void powerButtonDetector(void* args)
 {
   SharedThreadData* shData = static_cast<SharedThreadData*>(args);
@@ -74,8 +77,6 @@ void powerButtonDetector(void* args)
     }
   }
 }
-
-
 
 template<impl::LaunchFlags launchFlags>
 void hidInputPoller(void* args)
@@ -126,4 +127,4 @@ void hidInputPoller(void* args)
     svcSleepThread(20E6);
   }
 }
-}
+}  // namespace nikola::tsl::impl

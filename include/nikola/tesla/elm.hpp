@@ -11,10 +11,9 @@
 #include <strings.h>
 #include <switch.h>
 
+#include "focus_direction.hpp"
 #include "gfx.hpp"
 #include "nikola/utils/ini_funcs.hpp"
-#include "focus_direction.hpp"
-
 
 namespace nikola::tsl::elm
 {
@@ -28,6 +27,7 @@ class Element
 {
 public:
   Element() {}
+
   virtual ~Element() {}
 
   std::string highlightColor1Str = parseValueFromIniSection(
@@ -35,10 +35,8 @@ public:
   std::string highlightColor2Str = parseValueFromIniSection(
       "/config/ultrahand/theme.ini", "theme", "highlight_color_2");
 
-  gfx::Color highlightColor1 =
-      gfx::RGB888(highlightColor1Str, "#2288CC");
-  gfx::Color highlightColor2 =
-      gfx::RGB888(highlightColor2Str, "#88FFFF");
+  gfx::Color highlightColor1 = gfx::RGB888(highlightColor1Str, "#2288CC");
+  gfx::Color highlightColor2 = gfx::RGB888(highlightColor2Str, "#88FFFF");
 
   /**
    * @brief Handles focus requesting
@@ -156,18 +154,21 @@ public:
    * @return X position
    */
   virtual u16 getX() final { return this->m_x; }
+
   /**
    * @brief Gets the element's Y position
    *
    * @return Y position
    */
   virtual u16 getY() final { return this->m_y; }
+
   /**
    * @brief Gets the element's Width
    *
    * @return Width
    */
   virtual u16 getWidth() final { return this->m_width; }
+
   /**
    * @brief Gets the element's Height
    *
@@ -253,6 +254,7 @@ public:
       , m_subtitle(subtitle)
   {
   }
+
   virtual ~OverlayFrame();
 
   virtual void draw(gfx::Renderer* renderer) override;
@@ -296,6 +298,7 @@ public:
       , m_color(color)
   {
   }
+
   virtual ~DebugRectangle() {}
 
   virtual void draw(gfx::Renderer* renderer) override;
@@ -303,7 +306,9 @@ public:
   virtual void layout(u16 parentX,
                       u16 parentY,
                       u16 parentWidth,
-                      u16 parentHeight) override {}
+                      u16 parentHeight) override
+  {
+  }
 
 private:
   gfx::Color m_color;
@@ -330,6 +335,7 @@ public:
       , m_text(text)
   {
   }
+
   virtual ~ListItem() {}
 
   virtual void draw(gfx::Renderer* renderer) override;
@@ -440,6 +446,7 @@ public:
       , m_entriesShown(entriesShown)
   {
   }
+
   virtual ~List();
 
   virtual void draw(gfx::Renderer* renderer) override;
@@ -501,8 +508,9 @@ public:
                    renderFunc)
       : Element()
       , m_renderFunc(renderFunc)
-{
-}
+  {
+  }
+
   virtual ~CustomDrawer() {}
 
   virtual void draw(gfx::Renderer* renderer) override;
@@ -510,7 +518,9 @@ public:
   virtual void layout(u16 parentX,
                       u16 parentY,
                       u16 parentWidth,
-                      u16 parentHeight) override {}
+                      u16 parentHeight) override
+  {
+  }
 
 private:
   std::function<void(gfx::Renderer*, u16 x, u16 y, u16 w, u16 h)> m_renderFunc;

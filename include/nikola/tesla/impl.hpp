@@ -86,7 +86,6 @@ void homeButtonDetector(void* args);
  */
 void powerButtonDetector(void* args);
 
-
 }  // namespace nikola::tsl::impl
 
 #endif  // LIBNIKOLA_IMPL_HPP

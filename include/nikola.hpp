@@ -12,7 +12,8 @@
 #include "nikola/utils/ini_funcs.hpp"
 #include "nikola/utils/string_funcs.hpp"
 
-namespace nikola {
+namespace nikola
+{
 
 /**
  * @brief Reports the name of the library
@@ -34,5 +35,5 @@ private:
   std::string m_name;
 };
 
-} // namespace nikola
+}  // namespace nikola
 #endif  // LIBNIKOLA_NIKOLA_HPP
