@@ -16,6 +16,6 @@ namespace color
 constexpr u16 ColorTransparent = 0x0000;  ///< Transparent color
 }
 
-}  // namespace nikola::tsl::style
+}  // namespace tsl::style
 
 #endif  // LIBNIKOLA_STYLE_HPP

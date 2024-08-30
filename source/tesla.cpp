@@ -2,6 +2,7 @@
 // Created by pugemon on 30.08.24.
 //
 #include "nikola/tesla.hpp"
+#include "nikola/tesla/impl.hpp"
 
 namespace tsl
 {
@@ -257,31 +258,8 @@ void Overlay::goBack()
     this->close();
 }
 
-template<typename G, typename... Args>
-std::unique_ptr<tsl::Gui>& Overlay::changeTo(Args&&... args)
-{
-  auto newGui = std::make_unique<G>(std::forward<Args>(args)...);
-  newGui->m_topElement = newGui->createUI();
-  newGui->requestFocus(newGui->m_topElement, FocusDirection::None);
-
-  this->m_guiStack.push(std::move(newGui));
-
-  return this->m_guiStack.top();
-}
-
-template<typename T, typename... Args>
-constexpr std::unique_ptr<T> Overlay::initially(Args&&... args)
-{
-  return std::make_unique<T>(args...);
-}
-
 #pragma endregion class_Overlay
 
-template<typename G, typename... Args>
-std::unique_ptr<tsl::Gui>& changeTo(Args&&... args)
-{
-  return Overlay::get()->changeTo<G, Args...>(std::forward<Args>(args)...);
-}
 
 void goBack()
 {
@@ -295,11 +273,9 @@ void setNextOverlay(std::string ovlPath, std::string args)
   envSetNextLoad(ovlPath.c_str(), args.c_str());
 }
 
-template<typename TOverlay, impl::LaunchFlags launchFlags>
-int loop(int argc, char** argv)
+template<impl::LaunchFlags launchFlags>
+int loop(OverlayFactory overlay, int argc, char** argv)
 {
-  static_assert(std::is_base_of_v<tsl::Overlay, TOverlay>,
-                "tsl::loop expects a type derived from tsl::Overlay");
 
   impl::SharedThreadData shData;
 
@@ -333,21 +309,22 @@ int loop(int argc, char** argv)
 
   eventCreate(&shData.comboEvent, false);
 
-  auto& overlay = tsl::Overlay::s_overlayInstance;
-  overlay = new TOverlay();
-  overlay->m_closeOnExit =
+  auto overlayFactory = overlay();
+  auto& overlayInstance = tsl::Overlay::s_overlayInstance;
+  overlayInstance = overlayFactory.release();
+  overlayInstance->m_closeOnExit =
       (u8(launchFlags) & u8(impl::LaunchFlags::CloseOnExit))
       == u8(impl::LaunchFlags::CloseOnExit);
 
-  tsl::hlp::doWithSmSession([&overlay] { overlay->initServices(); });
-  overlay->initScreen();
-  overlay->changeTo(overlay->loadInitialGui());
+  tsl::hlp::doWithSmSession([&overlayInstance] { overlayInstance->initServices(); });
+  overlayInstance->initScreen();
+  overlayInstance->changeTo(overlayInstance->loadInitialGui());
 
   // Argument parsing
   for (u8 arg = 0; arg < argc; arg++) {
     if (strcasecmp(argv[arg], "--skipCombo") == 0) {
       eventFire(&shData.comboEvent);
-      overlay->disableNextAnimation();
+      overlayInstance->disableNextAnimation();
     }
   }
 
@@ -358,16 +335,16 @@ int loop(int argc, char** argv)
 
     hlp::requestForeground(true);
 
-    overlay->show();
-    overlay->clearScreen();
+    overlayInstance->show();
+    overlayInstance->clearScreen();
 
     while (shData.running) {
-      overlay->loop();
+      overlayInstance->loop();
 
       {
         std::scoped_lock lock(shData.dataMutex);
-        if (!overlay->fadeAnimationPlaying()) {
-          overlay->handleInput(shData.keysDownPending,
+        if (!overlayInstance->fadeAnimationPlaying()) {
+          overlayInstance->handleInput(shData.keysDownPending,
                                shData.keysHeld,
                                shData.touchState.touches[0],
                                shData.joyStickPosLeft,
@@ -376,15 +353,15 @@ int loop(int argc, char** argv)
         shData.keysDownPending = 0;
       }
 
-      if (overlay->shouldHide())
+      if (overlayInstance->shouldHide())
         break;
 
-      if (overlay->shouldClose())
+      if (overlayInstance->shouldClose())
         shData.running = false;
     }
 
-    overlay->clearScreen();
-    overlay->resetFlags();
+    overlayInstance->clearScreen();
+    overlayInstance->resetFlags();
 
     hlp::requestForeground(false);
 
@@ -403,10 +380,10 @@ int loop(int argc, char** argv)
   threadWaitForExit(&powerButtonDetectorThread);
   threadClose(&powerButtonDetectorThread);
 
-  overlay->exitScreen();
-  overlay->exitServices();
+  overlayInstance->exitScreen();
+  overlayInstance->exitServices();
 
-  delete overlay;
+  delete overlayInstance;
 
   return 0;
 }

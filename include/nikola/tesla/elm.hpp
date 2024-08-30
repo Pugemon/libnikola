@@ -8,7 +8,6 @@
 #include <chrono>
 #include <functional>
 
-#include <strings.h>
 #include <switch.h>
 
 #include "focus_direction.hpp"

@@ -74,6 +74,6 @@ using IniData = std::map<std::string, std::map<std::string, std::string>>;
  */
 IniData parseIni(const std::string& str);
 }  // namespace ini
-}  // namespace nikola::tsl::hlp
+}  // namespace tsl::hlp
 
 #endif  // LIBNIKOLA_HLP_HPP

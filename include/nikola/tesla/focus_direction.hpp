@@ -11,7 +11,7 @@ namespace tsl
  * @brief Direction in which focus moved before landing on
  *        the currently focused element
  */
-enum class FocusDirection
+enum class FocusDirection : u8
 {
   None,  ///< Focus was placed on the element programmatically without user
          ///< input
@@ -20,6 +20,6 @@ enum class FocusDirection
   Left,  ///< Focus moved from left to right
   Right  ///< Focus moved from right to left
 };
-}  // namespace nikola::tsl
+}  // namespace tsl
 
 #endif  // LIBNIKOLA_FOCUS_DIRECTION_HPP

@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <switch/services/hid.h>
 #define KEY_A HidNpadButton_A
 #define KEY_B HidNpadButton_B
 #define KEY_X HidNpadButton_X
@@ -45,8 +46,8 @@
   (HidNpadButton_Left | HidNpadButton_StickLLeft | HidNpadButton_StickRLeft)
 #define KEY_RIGHT \
   (HidNpadButton_Right | HidNpadButton_StickLRight | HidNpadButton_StickRRight)
-#define touchPosition const HidTouchState
-#define touchInput &touchPos
+#define TOUCH_POSITION const HidTouchState
+#define TOUCH_INPUT &touchPos
 #define JoystickPosition HidAnalogStickState
 
 #include <list>
@@ -84,20 +85,16 @@
   if (Result res = x; R_FAILED(res)) \
   fatalThrow(res)
 
-u8 TeslaFPS = 60;
-u8 alphabackground = 0xD;
-bool FullMode = true;
-PadState pad;
-uint16_t framebufferWidth = 448;
-uint16_t framebufferHeight = 720;
-bool deactivateOriginalFooter = false;
+inline u8 TeslaFPS = 60;
+inline u8 alphabackground = 0xD;
+inline bool FullMode = true;
+inline PadState pad;
+inline uint16_t framebufferWidth = 448;
+inline uint16_t framebufferHeight = 720;
+inline bool deactivateOriginalFooter = false;
 
 namespace tsl
 {
-
-template<typename TOverlay,
-         impl::LaunchFlags launchFlags = impl::LaunchFlags::CloseOnExit>
-int loop(int argc, char** argv);
 
 /**
  * @brief The top level Gui class
@@ -140,7 +137,7 @@ public:
    */
   virtual bool handleInput(u64 keysDown,
                            u64 keysHeld,
-                           touchPosition touchInput,
+                           TOUCH_POSITION TOUCH_INPUT,
                            JoystickPosition leftJoyStick,
                            JoystickPosition rightJoyStick);
 
@@ -196,6 +193,11 @@ private:
 };
 
 // Overlay
+
+using OverlayFactory = std::function<std::unique_ptr<Overlay>()>;
+
+template<impl::LaunchFlags launchFlags = impl::LaunchFlags::CloseOnExit>
+int loop(OverlayFactory overlay, int argc, char** argv);
 
 /**
  * @brief The top level Overlay class
@@ -304,7 +306,11 @@ public:
    * @return constexpr std::unique_ptr<T>
    */
   template<typename T, typename... Args>
-  constexpr std::unique_ptr<T> initially(Args&&... args);
+  constexpr std::unique_ptr<T> initially(Args&&... args)
+  {
+    return std::make_unique<T>(args...);
+  }
+
 
 private:
   using GuiPtr = std::unique_ptr<tsl::Gui>;
@@ -371,7 +377,7 @@ private:
    */
   virtual void handleInput(u64 keysDown,
                            u64 keysHeld,
-                           touchPosition touchPos,
+                           TOUCH_POSITION touchPos,
                            JoystickPosition joyStickPosLeft,
                            JoystickPosition joyStickPosRight) final;
 
@@ -403,7 +409,16 @@ private:
    * @return Reference to the newly created Gui
    */
   template<typename G, typename... Args>
-  std::unique_ptr<tsl::Gui>& changeTo(Args&&... args);
+  std::unique_ptr<tsl::Gui>& changeTo(Args&&... args)
+  {
+    auto newGui = std::make_unique<G>(std::forward<Args>(args)...);
+    newGui->m_topElement = newGui->createUI();
+    newGui->requestFocus(newGui->m_topElement, FocusDirection::None);
+
+    this->m_guiStack.push(std::move(newGui));
+
+    return this->m_guiStack.top();
+  }
 
   /**
    * @brief Changes to a different Gui
@@ -421,11 +436,9 @@ private:
 
   template<typename G, typename... Args>
   friend std::unique_ptr<tsl::Gui>& changeTo(Args&&... args);
-
   friend void goBack();
 
-  template<typename, tsl::impl::LaunchFlags>
-  friend int loop(int argc, char** argv);
+  friend int loop(OverlayFactory overlay, int argc, char** argv);
 
   friend class tsl::Gui;
 };
@@ -439,7 +452,10 @@ private:
  * @return Reference to the newly created Gui
  */
 template<typename G, typename... Args>
-std::unique_ptr<tsl::Gui>& changeTo(Args&&... args);
+std::unique_ptr<tsl::Gui>& changeTo(Args&&... args)
+{
+  return Overlay::get()->changeTo<G, Args...>(std::forward<Args>(args)...);
+}
 
 /**
  * @brief Pops the top Gui from the stack and goes back to the last one
@@ -449,10 +465,13 @@ void goBack();
 
 void setNextOverlay(std::string ovlPath, std::string args);
 
+template <typename TOverlay>
+concept DerivedFromOverlay = std::is_base_of_v<Overlay, TOverlay>;
+
 /**
  * @brief libtesla's main function
  * @note Call it directly from main passing in argc and argv and returning it
- * e.g `return tsl::loop<OverlayTest>(argc, argv);`
+ * e.g `return tsl::initOverlay<OverlayTest>(argc, argv);`
  *
  * @tparam TOverlay Your overlay class
  * @tparam launchFlags \ref LaunchFlags
@@ -460,8 +479,16 @@ void setNextOverlay(std::string ovlPath, std::string args);
  * @param argv argv
  * @return int result
  */
-template<typename TOverlay, impl::LaunchFlags launchFlags>
-int loop(int argc, char** argv);
+template <DerivedFromOverlay TOverlay,
+         impl::LaunchFlags launchFlags = impl::LaunchFlags::CloseOnExit>
+int initOverlay(int argc, char** argv)
+{
+  auto factory = []() -> std::unique_ptr<tsl::Overlay> {
+    return std::make_unique<TOverlay>();
+  };
+
+  return loop<launchFlags>(factory, argc, argv);
+};
 
 }  // namespace tsl
 

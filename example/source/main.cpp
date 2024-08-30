@@ -84,5 +84,5 @@ public:
 };
 
 int main(int argc, char **argv) {
-    return tsl::loop<OverlayTest>(argc, argv);
+    return tsl::initOverlay<OverlayTest>(argc, argv);
 }

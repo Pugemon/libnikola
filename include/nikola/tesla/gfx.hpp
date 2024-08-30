@@ -17,7 +17,7 @@
 namespace tsl
 {
 class Overlay;
-}
+} // namespace tsl
 
 namespace tsl::gfx
 {
@@ -186,7 +186,7 @@ public:
    * @param h Bitmap height
    * @param bmp Pointer to bitmap data
    */
-  void drawBitmap(s32 x, s32 y, s32 w, s32 h, const u8* bmp);
+  void drawBitmap(s16 x, s16 y, s16 w, s16 h, const u8* bmp);
 
   /**
    * @brief Fills the entire layer with a given color
@@ -201,7 +201,7 @@ public:
    */
   void clearScreen();
 
-  void setLayerPos(u32 x, u32 y);
+  void setLayerPos(u16 x, u16 y);
 
   static Renderer& getRenderer();
 
@@ -367,9 +367,9 @@ private:
                  stbtt_fontinfo* font,
                  float fontSize);
 
-  void setLayerPosImpl(u32 x, u32 y);
+  void setLayerPosImpl(u16 x, u16 y);
 };
 
-}  // namespace nikola::tsl::gfx
+}  // namespace tsl::gfx
 
 #endif  // LIBNIKOLA_GFX_HPP

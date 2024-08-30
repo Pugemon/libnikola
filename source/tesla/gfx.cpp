@@ -250,7 +250,7 @@ void Renderer::drawDashedLine(
   }
 }
 
-void Renderer::drawBitmap(s32 x, s32 y, s32 w, s32 h, const u8* bmp)
+void Renderer::drawBitmap(s16 x, s16 y, s16 w, s16 h, const u8* bmp)
 {
   for (s32 y1 = 0; y1 < h; y1++) {
     for (s32 x1 = 0; x1 < w; x1++) {
@@ -276,7 +276,7 @@ void Renderer::clearScreen()
   this->fillScreen({0x00, 0x00, 0x00, 0x00});
 }
 
-void Renderer::setLayerPos(u32 x, u32 y)
+void Renderer::setLayerPos(u16 x, u16 y)
 {
   float ratio = 1.5;
   u32 maxX = cfg::ScreenWidth - (int)(ratio * cfg::FramebufferWidth);
@@ -590,11 +590,11 @@ void Renderer::drawGlyph(s32 codepoint,
   std::free(glyphBmp);
 }
 
-void Renderer::setLayerPosImpl(u32 x, u32 y)
+void Renderer::setLayerPosImpl(u16 x, u16 y)
 {
   cfg::LayerPosX = x;
   cfg::LayerPosY = y;
   ASSERT_FATAL(
       viSetLayerPosition(&this->m_layer, cfg::LayerPosX, cfg::LayerPosY));
 }
-}  // namespace nikola::tsl::gfx
+}  // namespace tsl::gfx
