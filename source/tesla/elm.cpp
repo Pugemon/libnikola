@@ -10,7 +10,7 @@
 
 constexpr float M_PI = 3.14159265358979323846;
 
-namespace nikola::tsl::elm
+namespace tsl::elm
 {
 
 Element* Element::requestFocus(Element* oldFocus, FocusDirection direction)

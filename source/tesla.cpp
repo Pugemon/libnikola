@@ -3,7 +3,7 @@
 //
 #include "nikola/tesla.hpp"
 
-namespace nikola::tsl
+namespace tsl
 {
 
 #pragma region class_GUI

@@ -11,7 +11,7 @@
 #include <switch/services/hid.h>
 #include <switch/types.h>
 
-namespace nikola::tsl::impl
+namespace tsl::impl
 {
 
 /**

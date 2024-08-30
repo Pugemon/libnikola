@@ -8,7 +8,7 @@
 
 #include "nikola/tesla.hpp"
 
-namespace nikola::tsl::impl
+namespace tsl::impl
 {
 
 void parseOverlaySettings(u64& launchCombo)

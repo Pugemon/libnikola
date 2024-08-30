@@ -12,7 +12,7 @@
 #include <switch/services/vi.h>
 #include <switch/types.h>
 
-namespace nikola::tsl::hlp
+namespace tsl::hlp
 {
 
 /**

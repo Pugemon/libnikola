@@ -51,6 +51,7 @@
 
 #include <list>
 #include <stack>
+#include <memory>
 
 #include <switch/types.h>
 
@@ -61,8 +62,6 @@
 #include "tesla/impl.hpp"
 #include "tesla/style.hpp"
 
-namespace nikola
-{
 
 // Define this makro before including tesla.hpp in your main file. If you intend
 // to use the tesla.hpp header in more than one source file, only define it
@@ -305,7 +304,7 @@ public:
    * @return constexpr std::unique_ptr<T>
    */
   template<typename T, typename... Args>
-  constexpr inline std::unique_ptr<T> initially(Args&&... args);
+  constexpr std::unique_ptr<T> initially(Args&&... args);
 
 private:
   using GuiPtr = std::unique_ptr<tsl::Gui>;
@@ -468,7 +467,7 @@ int loop(int argc, char** argv);
 
 #ifdef TESLA_INIT_IMPL
 
-namespace tsl::cfg
+namespace nikola::tsl::cfg
 {
 
 u16 LayerWidth = 0;
@@ -478,7 +477,7 @@ u16 LayerPosY = 0;
 u16 FramebufferWidth = 0;
 u16 FramebufferHeight = 0;
 
-}  // namespace tsl::cfg
+}  // namespace nikola::tsl::cfg
 
 extern "C" void __libnx_init_time(void);
 
@@ -531,4 +530,3 @@ void __appExit(void)
 }
 
 #endif
-}  // namespace nikola

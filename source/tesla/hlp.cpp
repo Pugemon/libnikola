@@ -8,7 +8,7 @@
 
 #include "nikola/tesla.hpp"
 
-namespace nikola::tsl::hlp
+namespace tsl::hlp
 {
 
 void doWithSmSession(std::function<void()> f)

@@ -7,7 +7,7 @@
 
 #include <switch/types.h>
 
-namespace nikola::tsl::cfg
+namespace tsl::cfg
 {
 
 constexpr u32 ScreenWidth = 1920;  ///< Width of the Screen

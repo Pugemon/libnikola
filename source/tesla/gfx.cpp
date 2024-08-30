@@ -13,7 +13,7 @@
   if (Result res = x; R_FAILED(res)) \
   fatalThrow(res)
 
-namespace nikola::tsl::gfx
+namespace tsl::gfx
 {
 
 bool isValidHexColor(const std::string& hexColor)

@@ -7,7 +7,7 @@
 
 #include <switch/types.h>
 
-namespace nikola::tsl::style
+namespace tsl::style
 {
 constexpr u32 ListItemDefaultHeight = 72;  ///< Height of a standard ListItem
 

@@ -15,7 +15,7 @@
 #include "gfx.hpp"
 #include "nikola/utils/ini_funcs.hpp"
 
-namespace nikola::tsl::elm
+namespace tsl::elm
 {
 
 /**
@@ -526,6 +526,6 @@ private:
   std::function<void(gfx::Renderer*, u16 x, u16 y, u16 w, u16 h)> m_renderFunc;
 };
 
-}  // namespace nikola::tsl::elm
+}  // namespace tsl::elm
 
 #endif  // LIBNIKOLA_ELM_HPP

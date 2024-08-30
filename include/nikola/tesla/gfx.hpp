@@ -14,12 +14,12 @@
 
 #include "../stb_truetype.h"
 
-namespace nikola::tsl
+namespace tsl
 {
 class Overlay;
 }
 
-namespace nikola::tsl::gfx
+namespace tsl::gfx
 {
 
 extern "C" u64 __nx_vi_layer_id;

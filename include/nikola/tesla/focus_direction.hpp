@@ -5,7 +5,7 @@
 #ifndef LIBNIKOLA_FOCUS_DIRECTION_HPP
 #define LIBNIKOLA_FOCUS_DIRECTION_HPP
 
-namespace nikola::tsl
+namespace tsl
 {
 /**
  * @brief Direction in which focus moved before landing on

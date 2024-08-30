@@ -73,3 +73,11 @@ elseif(NOT PROJECT_IS_TOP_LEVEL)
 endif()
 
 include(cmake/dev-mode.cmake)
+
+# ---- Example building ----
+
+option(BUILD_EXAMPLE "Build the example" OFF)
+
+if(BUILD_EXAMPLE)
+    add_subdirectory(example)
+endif()
