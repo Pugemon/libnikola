@@ -5,18 +5,21 @@
 #ifndef LIBNIKOLA_ELM_HPP
 #define LIBNIKOLA_ELM_HPP
 
-#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
 #include <cwctype>
+#include <functional>
 #include <string>
 
 #include <strings.h>
 #include <switch.h>
 
 #include "gfx.hpp"
+#include "nikola/utils/ini_funcs.hpp"
+#include "focus_direction.hpp"
+
 
 namespace nikola::tsl::elm
 {
@@ -37,10 +40,10 @@ public:
   std::string highlightColor2Str = parseValueFromIniSection(
       "/config/ultrahand/theme.ini", "theme", "highlight_color_2");
 
-  tsl::gfx::Color highlightColor1 =
-      tsl::gfx::RGB888(highlightColor1Str, "#2288CC");
-  tsl::gfx::Color highlightColor2 =
-      tsl::gfx::RGB888(highlightColor2Str, "#88FFFF");
+  gfx::Color highlightColor1 =
+      gfx::RGB888(highlightColor1Str, "#2288CC");
+  gfx::Color highlightColor2 =
+      gfx::RGB888(highlightColor2Str, "#88FFFF");
 
   /**
    * @brief Handles focus requesting
@@ -235,13 +238,13 @@ class OverlayFrame : public Element
 public:
   std::string defaultTextColorStr = parseValueFromIniSection(
       "/config/ultrahand/theme.ini", "theme", "text_color");
-  tsl::gfx::Color defaultTextColor = tsl::gfx::RGB888(defaultTextColorStr);
+  gfx::Color defaultTextColor = gfx::RGB888(defaultTextColorStr);
   std::string clockColorStr = parseValueFromIniSection(
       "/config/ultrahand/theme.ini", "theme", "clock_color");
-  tsl::gfx::Color clockColor = tsl::gfx::RGB888(clockColorStr);
+  gfx::Color clockColor = gfx::RGB888(clockColorStr);
   std::string batteryColorStr = parseValueFromIniSection(
       "/config/ultrahand/theme.ini", "theme", "battery_color");
-  tsl::gfx::Color batteryColor = tsl::gfx::RGB888(batteryColorStr);
+  gfx::Color batteryColor = gfx::RGB888(batteryColorStr);
 
   /**
    * @brief Constructor
@@ -320,7 +323,7 @@ class ListItem : public Element
 public:
   std::string defaultTextColorStr = parseValueFromIniSection(
       "/config/ultrahand/theme.ini", "theme", "text_color");
-  tsl::gfx::Color defaultTextColor = tsl::gfx::RGB888(defaultTextColorStr);
+  gfx::Color defaultTextColor = gfx::RGB888(defaultTextColorStr);
 
   /**
    * @brief Constructor

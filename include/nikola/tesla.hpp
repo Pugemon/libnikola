@@ -48,7 +48,7 @@
 #define touchPosition const HidTouchState
 #define touchInput &touchPos
 #define JoystickPosition HidAnalogStickState
-float M_PI = 3.14159265358979323846;
+
 
 #include "tesla/cfg.hpp"
 #include "tesla/style.hpp"
@@ -117,18 +117,7 @@ namespace tsl
 
 // Declarations
 
-/**
- * @brief Direction in which focus moved before landing on
- *        the currently focused element
- */
-enum class FocusDirection
-{
-  None,  ///< Focus was placed on the element programatically without user input
-  Up,  ///< Focus moved upwards
-  Down,  ///< Focus moved downwards
-  Left,  ///< Focus moved from left to rigth
-  Right  ///< Focus moved from right to left
-};
+
 
 class Overlay;
 
@@ -143,17 +132,6 @@ template<typename TOverlay,
          impl::LaunchFlags launchFlags = impl::LaunchFlags::CloseOnExit>
 int loop(int argc, char** argv);
 
-
-
-// Renderer
-
-
-
-// Elements
-
-
-
-// GUI
 
 /**
  * @brief The top level Gui class

@@ -4,10 +4,14 @@
 
 #include "nikola/tesla/elm.hpp"
 
+#include "nikola/tesla.hpp"
+
+constexpr float M_PI = 3.14159265358979323846;
+
 namespace nikola::tsl::elm
 {
 
-Element* elm::Element::requestFocus(Element* oldFocus, FocusDirection direction)
+Element* Element::requestFocus(Element* oldFocus, FocusDirection direction)
 {
   return nullptr;
 }
