@@ -5,8 +5,11 @@
 #ifndef LIBNIKOLA_IMPL_HPP
 #define LIBNIKOLA_IMPL_HPP
 
-#include <switch.h>
 #include <mutex>
+
+#include <switch/kernel/event.h>
+#include <switch/services/hid.h>
+#include <switch/types.h>
 
 namespace nikola::tsl::impl
 {

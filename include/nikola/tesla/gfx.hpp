@@ -5,15 +5,12 @@
 #ifndef LIBNIKOLA_GFX_HPP
 #define LIBNIKOLA_GFX_HPP
 
-#include <algorithm>
-#include <cstring>
-#include <cwctype>
 #include <string>
 
-#include <cmath>
-#include <cstdlib>
-#include <strings.h>
-#include <switch.h>
+#include <switch/display/framebuffer.h>
+#include <switch/kernel/event.h>
+#include <switch/services/vi.h>
+#include <switch/types.h>
 
 #include "../stb_truetype.h"
 

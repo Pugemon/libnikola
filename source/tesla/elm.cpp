@@ -3,8 +3,10 @@
 //
 
 #include "nikola/tesla/elm.hpp"
-
 #include "nikola/tesla.hpp"
+
+#include <cmath>
+
 
 constexpr float M_PI = 3.14159265358979323846;
 
@@ -56,6 +58,8 @@ void Element::shakeHighlight(FocusDirection direction)
 
 void Element::drawHighlight(gfx::Renderer* renderer)
 {
+  using namespace std::literals::chrono_literals;
+
   // Get the current time
   auto currentTime = std::chrono::system_clock::now();
   auto timeInSeconds =

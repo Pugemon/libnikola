@@ -8,7 +8,9 @@
 #include <functional>
 #include <map>
 #include <string>
-#include <switch.h>
+
+#include <switch/services/vi.h>
+#include <switch/types.h>
 
 namespace nikola::tsl::hlp
 {

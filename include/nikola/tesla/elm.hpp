@@ -6,12 +6,7 @@
 #define LIBNIKOLA_ELM_HPP
 
 #include <chrono>
-#include <cmath>
-#include <cstdlib>
-#include <cstring>
-#include <cwctype>
 #include <functional>
-#include <string>
 
 #include <strings.h>
 #include <switch.h>

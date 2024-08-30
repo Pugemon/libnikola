@@ -3,8 +3,9 @@
 //
 
 #include "nikola/tesla/hlp.hpp"
-
 #include "nikola/tesla.hpp"
+
+#include <functional>
 
 namespace nikola::tsl::hlp
 {

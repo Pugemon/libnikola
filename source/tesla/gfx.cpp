@@ -6,6 +6,8 @@
 #include "nikola/tesla/hlp.hpp"
 #include "nikola/tesla.hpp"
 
+#include <cmath>
+
 
 #define ASSERT_FATAL(x) \
   if (Result res = x; R_FAILED(res)) \

@@ -56,25 +56,10 @@
 #include "tesla/hlp.hpp"
 #include "tesla/gfx.hpp"
 #include "tesla/elm.hpp"
-#include <algorithm>
-#include <chrono>
-#include <cstring>
-#include <cwctype>
-#include <functional>
+
+#include <switch/types.h>
 #include <list>
-#include <map>
-#include <memory>
-#include <mutex>
 #include <stack>
-#include <string>
-#include <type_traits>
-
-#include <math.h>
-#include <stdlib.h>
-#include <strings.h>
-#include <switch.h>
-
-#include "utils/ini_funcs.hpp"
 
 namespace nikola
 {
@@ -109,8 +94,6 @@ PadState pad;
 uint16_t framebufferWidth = 448;
 uint16_t framebufferHeight = 720;
 bool deactivateOriginalFooter = false;
-
-using namespace std::literals::chrono_literals;
 
 namespace tsl
 {
