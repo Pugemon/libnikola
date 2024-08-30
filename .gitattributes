@@ -1,0 +1,5 @@
+* text=auto eol=lf
+
+/include/nicola/stb_truetype.h linguist-vendored
+/docs/* linguist-vendored
+/example/* linguist-vendored

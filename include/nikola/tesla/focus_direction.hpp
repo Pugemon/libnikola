@@ -5,6 +5,8 @@
 #ifndef LIBNIKOLA_FOCUS_DIRECTION_HPP
 #define LIBNIKOLA_FOCUS_DIRECTION_HPP
 
+#include <switch.h>
+
 namespace tsl
 {
 /**

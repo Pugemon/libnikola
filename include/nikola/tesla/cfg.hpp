@@ -5,7 +5,7 @@
 #ifndef LIBNIKOLA_CFG_HPP
 #define LIBNIKOLA_CFG_HPP
 
-#include <switch/types.h>
+#include <switch.h>
 
 namespace tsl::cfg
 {

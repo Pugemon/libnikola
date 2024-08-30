@@ -28,8 +28,15 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE libnikola::libnikola)
 
+nx_generate_nacp(
+        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.nacp"
+        AUTHOR "Pugemon"
+        VERSION "${PROJECT_VERSION}"
+        NAME "${PROJECT_NAME}"
+)
+
 nx_create_nro(${PROJECT_NAME}
         OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.ovl"
+        NACP "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.nacp"
         NOICON
-        NONACP
 )

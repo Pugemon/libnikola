@@ -84,5 +84,6 @@ public:
 };
 
 int main(int argc, char **argv) {
-    return tsl::initOverlay<OverlayTest>(argc, argv);
+    bool closeOnExit = true;
+    return tsl::initOverlay<OverlayTest>(closeOnExit, argc, argv);
 }

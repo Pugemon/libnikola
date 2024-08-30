@@ -1,7 +1,9 @@
 //
 // Created by pugemon on 30.08.24.
 //
+#include <switch.h>
 #include "nikola/tesla.hpp"
+#include <strings.h>
 #include "nikola/tesla/impl.hpp"
 
 namespace tsl
@@ -273,8 +275,8 @@ void setNextOverlay(std::string ovlPath, std::string args)
   envSetNextLoad(ovlPath.c_str(), args.c_str());
 }
 
-template<impl::LaunchFlags launchFlags>
-int loop(OverlayFactory overlay, int argc, char** argv)
+
+int loop(OverlayFactory overlay, bool closeOnExit, int argc, char** argv)
 {
 
   impl::SharedThreadData shData;
@@ -283,7 +285,7 @@ int loop(OverlayFactory overlay, int argc, char** argv)
 
   Thread hidPollerThread, homeButtonDetectorThread, powerButtonDetectorThread;
   threadCreate(&hidPollerThread,
-               impl::hidInputPoller<launchFlags>,
+               impl::hidInputPoller,
                &shData,
                nullptr,
                0x1000,
@@ -312,9 +314,7 @@ int loop(OverlayFactory overlay, int argc, char** argv)
   auto overlayFactory = overlay();
   auto& overlayInstance = tsl::Overlay::s_overlayInstance;
   overlayInstance = overlayFactory.release();
-  overlayInstance->m_closeOnExit =
-      (u8(launchFlags) & u8(impl::LaunchFlags::CloseOnExit))
-      == u8(impl::LaunchFlags::CloseOnExit);
+  overlayInstance->m_closeOnExit = closeOnExit;
 
   tsl::hlp::doWithSmSession([&overlayInstance] { overlayInstance->initServices(); });
   overlayInstance->initScreen();

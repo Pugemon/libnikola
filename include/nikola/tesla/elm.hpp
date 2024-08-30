@@ -12,7 +12,7 @@
 
 #include "focus_direction.hpp"
 #include "gfx.hpp"
-#include "nikola/utils/ini_funcs.hpp"
+#include "../utils/ini_funcs.hpp"
 
 namespace tsl::elm
 {
@@ -29,9 +29,9 @@ public:
 
   virtual ~Element() {}
 
-  std::string highlightColor1Str = parseValueFromIniSection(
+  std::string highlightColor1Str = nikola::utils::parseValueFromIniSection(
       "/config/ultrahand/theme.ini", "theme", "highlight_color_1");
-  std::string highlightColor2Str = parseValueFromIniSection(
+  std::string highlightColor2Str = nikola::utils::parseValueFromIniSection(
       "/config/ultrahand/theme.ini", "theme", "highlight_color_2");
 
   gfx::Color highlightColor1 = gfx::RGB888(highlightColor1Str, "#2288CC");
@@ -231,13 +231,13 @@ private:
 class OverlayFrame : public Element
 {
 public:
-  std::string defaultTextColorStr = parseValueFromIniSection(
+  std::string defaultTextColorStr = nikola::utils::parseValueFromIniSection(
       "/config/ultrahand/theme.ini", "theme", "text_color");
   gfx::Color defaultTextColor = gfx::RGB888(defaultTextColorStr);
-  std::string clockColorStr = parseValueFromIniSection(
+  std::string clockColorStr = nikola::utils::parseValueFromIniSection(
       "/config/ultrahand/theme.ini", "theme", "clock_color");
   gfx::Color clockColor = gfx::RGB888(clockColorStr);
-  std::string batteryColorStr = parseValueFromIniSection(
+  std::string batteryColorStr = nikola::utils::parseValueFromIniSection(
       "/config/ultrahand/theme.ini", "theme", "battery_color");
   gfx::Color batteryColor = gfx::RGB888(batteryColorStr);
 
@@ -320,7 +320,7 @@ private:
 class ListItem : public Element
 {
 public:
-  std::string defaultTextColorStr = parseValueFromIniSection(
+  std::string defaultTextColorStr = nikola::utils::parseValueFromIniSection(
       "/config/ultrahand/theme.ini", "theme", "text_color");
   gfx::Color defaultTextColor = gfx::RGB888(defaultTextColorStr);
 

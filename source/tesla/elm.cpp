@@ -3,7 +3,7 @@
 //
 
 #include <cmath>
-
+#include <switch.h>
 #include "nikola/tesla/elm.hpp"
 
 #include "nikola/tesla.hpp"

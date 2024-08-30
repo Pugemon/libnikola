@@ -2,6 +2,7 @@
 // Created by pugemon on 29.08.24.
 //
 #include <cmath>
+#include <switch.h>
 
 #include "nikola/tesla/gfx.hpp"
 

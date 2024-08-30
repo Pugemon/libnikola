@@ -18,10 +18,14 @@
  ********************************************************************************/
 
 #pragma once
+#include <cstdio>
 #include <cstring>  // For std::string, strlen(), etc.
 #include <map>  // For std::map
 #include <string>  // For std::string
 #include <vector>  // For std::vector
+
+namespace nikola::utils
+{
 
 /**
  * @brief Splits a string into a vector of substrings using a specified
@@ -202,3 +206,4 @@ void renameIniSection(const std::string& filePath,
  */
 void removeIniSection(const std::string& filePath,
                       const std::string& sectionName);
+} // namespace nikola::utils

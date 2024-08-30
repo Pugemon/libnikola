@@ -5,7 +5,7 @@
 #ifndef LIBNIKOLA_STYLE_HPP
 #define LIBNIKOLA_STYLE_HPP
 
-#include <switch/types.h>
+#include <switch.h>
 
 namespace tsl::style
 {

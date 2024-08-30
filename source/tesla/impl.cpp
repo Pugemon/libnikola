@@ -1,7 +1,7 @@
 //
 // Created by pugemon on 30.08.24.
 //
-
+#include <switch.h>
 #include "nikola/tesla/impl.hpp"
 
 #include <switch/kernel/svc.h>
@@ -78,7 +78,6 @@ void powerButtonDetector(void* args)
   }
 }
 
-template<impl::LaunchFlags launchFlags>
 void hidInputPoller(void* args)
 {
   SharedThreadData* shData = static_cast<SharedThreadData*>(args);

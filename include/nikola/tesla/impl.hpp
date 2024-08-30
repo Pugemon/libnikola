@@ -7,9 +7,7 @@
 
 #include <mutex>
 
-#include <switch/kernel/event.h>
-#include <switch/services/hid.h>
-#include <switch/types.h>
+#include <switch.h>
 
 namespace tsl::impl
 {
@@ -62,10 +60,9 @@ void parseOverlaySettings(u64& launchCombo);
 /**
  * @brief Input polling loop thread
  *
- * @tparam launchFlags Launch flags
  * @param args Used to pass in a pointer to a \ref SharedThreadData struct
  */
-template<impl::LaunchFlags launchFlags>
+
 void hidInputPoller(void* args);
 
 /**

@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include <switch/services/hid.h>
 #define KEY_A HidNpadButton_A
 #define KEY_B HidNpadButton_B
 #define KEY_X HidNpadButton_X
@@ -54,7 +53,7 @@
 #include <stack>
 #include <memory>
 
-#include <switch/types.h>
+#include <switch.h>
 
 #include "tesla/cfg.hpp"
 #include "tesla/elm.hpp"
@@ -196,8 +195,7 @@ private:
 
 using OverlayFactory = std::function<std::unique_ptr<Overlay>()>;
 
-template<impl::LaunchFlags launchFlags = impl::LaunchFlags::CloseOnExit>
-int loop(OverlayFactory overlay, int argc, char** argv);
+int loop(OverlayFactory overlay, bool closeOnExit, int argc, char** argv);
 
 /**
  * @brief The top level Overlay class
@@ -438,7 +436,7 @@ private:
   friend std::unique_ptr<tsl::Gui>& changeTo(Args&&... args);
   friend void goBack();
 
-  friend int loop(OverlayFactory overlay, int argc, char** argv);
+  friend int loop(OverlayFactory overlay, bool closeOnExit, int argc, char** argv);
 
   friend class tsl::Gui;
 };
@@ -474,27 +472,27 @@ concept DerivedFromOverlay = std::is_base_of_v<Overlay, TOverlay>;
  * e.g `return tsl::initOverlay<OverlayTest>(argc, argv);`
  *
  * @tparam TOverlay Your overlay class
- * @tparam launchFlags \ref LaunchFlags
  * @param argc argc
  * @param argv argv
  * @return int result
  */
-template <DerivedFromOverlay TOverlay,
-         impl::LaunchFlags launchFlags = impl::LaunchFlags::CloseOnExit>
-int initOverlay(int argc, char** argv)
+template <DerivedFromOverlay TOverlay>
+int initOverlay(bool closeOnExit, int argc, char** argv)
 {
   auto factory = []() -> std::unique_ptr<tsl::Overlay> {
     return std::make_unique<TOverlay>();
   };
 
-  return loop<launchFlags>(factory, argc, argv);
+  return loop(factory, closeOnExit, argc, argv);
 };
 
 }  // namespace tsl
 
 #ifdef TESLA_INIT_IMPL
 
-namespace nikola::tsl::cfg
+#include <switch.h>
+
+namespace tsl::cfg
 {
 
 u16 LayerWidth = 0;
@@ -504,7 +502,7 @@ u16 LayerPosY = 0;
 u16 FramebufferWidth = 0;
 u16 FramebufferHeight = 0;
 
-}  // namespace nikola::tsl::cfg
+}  // namespace tsl::cfg
 
 extern "C" void __libnx_init_time(void);
 

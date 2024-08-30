@@ -7,10 +7,7 @@
 
 #include <string>
 
-#include <switch/display/framebuffer.h>
-#include <switch/kernel/event.h>
-#include <switch/services/vi.h>
-#include <switch/types.h>
+#include <switch.h>
 
 #include "../stb_truetype.h"
 

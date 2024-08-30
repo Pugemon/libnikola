@@ -9,6 +9,7 @@
 
 #include <dirent.h>
 #include <fnmatch.h>
+#include <sys/dirent.h>
 #include <sys/stat.h>
 
 #include "nikola/utils/string_funcs.hpp"

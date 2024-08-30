@@ -2,7 +2,9 @@
 // Created by pugemon on 28.08.24.
 //
 
+#include <strings.h>
 #include <functional>
+#include <switch.h>
 
 #include "nikola/tesla/hlp.hpp"
 

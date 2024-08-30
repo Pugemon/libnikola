@@ -9,8 +9,7 @@
 #include <map>
 #include <string>
 
-#include <switch/services/vi.h>
-#include <switch/types.h>
+#include <switch.h>
 
 namespace tsl::hlp
 {
