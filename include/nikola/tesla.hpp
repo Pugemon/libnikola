@@ -115,23 +115,8 @@ using namespace std::literals::chrono_literals;
 namespace tsl
 {
 
-// Declarations
-
-
-
-class Overlay;
-
-
-
-[[maybe_unused]] static void goBack();
-
-[[maybe_unused]] static void setNextOverlay(std::string ovlPath,
-                                            std::string args = "");
-
-template<typename TOverlay,
-         impl::LaunchFlags launchFlags = impl::LaunchFlags::CloseOnExit>
+template<typename TOverlay, impl::LaunchFlags launchFlags = impl::LaunchFlags::CloseOnExit>
 int loop(int argc, char** argv);
-
 
 /**
  * @brief The top level Gui class
@@ -144,11 +129,7 @@ class Gui
 public:
   Gui() {}
 
-  virtual ~Gui()
-  {
-    if (this->m_topElement != nullptr)
-      delete this->m_topElement;
-  }
+  virtual ~Gui();
 
   /**
    * @brief Creates all elements present in this Gui
@@ -180,27 +161,21 @@ public:
                            u64 keysHeld,
                            touchPosition touchInput,
                            JoystickPosition leftJoyStick,
-                           JoystickPosition rightJoyStick)
-  {
-    return false;
-  }
+                           JoystickPosition rightJoyStick);
 
   /**
    * @brief Gets the top level element
    *
    * @return Top level element
    */
-  virtual elm::Element* getTopElement() final { return this->m_topElement; }
+  virtual elm::Element* getTopElement() final;
 
   /**
    * @brief Get the currently focused element
    *
    * @return Focused element
    */
-  virtual elm::Element* getFocusedElement() final
-  {
-    return this->m_focusedElement;
-  }
+  virtual elm::Element* getFocusedElement() final;
 
   /**
    * @brief Requests focus to a element
@@ -211,24 +186,7 @@ public:
    * @param direction Focus direction
    */
   virtual void requestFocus(elm::Element* element,
-                            FocusDirection direction) final
-  {
-    elm::Element* oldFocus = this->m_focusedElement;
-
-    if (element != nullptr) {
-      this->m_focusedElement = element->requestFocus(oldFocus, direction);
-
-      if (oldFocus != nullptr)
-        oldFocus->setFocused(false);
-
-      if (this->m_focusedElement != nullptr) {
-        this->m_focusedElement->setFocused(true);
-      }
-    }
-
-    if (oldFocus == this->m_focusedElement && this->m_focusedElement != nullptr)
-      this->m_focusedElement->shakeHighlight(direction);
-  }
+                            FocusDirection direction) final;
 
   /**
    * @brief Removes focus from a element
@@ -236,11 +194,7 @@ public:
    * @param element Element to remove focus from. Pass nullptr to remove the
    * focus unconditionally
    */
-  virtual void removeFocus(elm::Element* element = nullptr) final
-  {
-    if (element == nullptr || element == this->m_focusedElement)
-      this->m_focusedElement = nullptr;
-  }
+  virtual void removeFocus(elm::Element* element = nullptr) final;
 
 protected:
   constexpr static inline auto a = &gfx::Renderer::a;
@@ -257,11 +211,7 @@ private:
    *
    * @param renderer
    */
-  virtual void draw(gfx::Renderer* renderer) final
-  {
-    if (this->m_topElement != nullptr)
-      this->m_topElement->draw(renderer);
-  }
+  virtual void draw(gfx::Renderer* renderer) final;
 };
 
 // Overlay
@@ -328,68 +278,40 @@ public:
    *
    * @return Current Gui reference
    */
-  virtual std::unique_ptr<tsl::Gui>& getCurrentGui() final
-  {
-    return this->m_guiStack.top();
-  }
+  virtual std::unique_ptr<tsl::Gui>& getCurrentGui() final;
 
   /**
    * @brief Shows the Gui
    *
    */
-  virtual void show() final
-  {
-    if (this->m_disableNextAnimation) {
-      this->m_animationCounter = 5;
-      this->m_disableNextAnimation = false;
-    } else {
-      this->m_fadeInAnimationPlaying = false;
-      this->m_animationCounter = 0;
-    }
-
-    this->onShow();
-  }
+  virtual void show() final;
 
   /**
    * @brief Hides the Gui
    *
    */
-  virtual void hide() final
-  {
-    if (this->m_disableNextAnimation) {
-      this->m_animationCounter = 0;
-      this->m_disableNextAnimation = false;
-    } else {
-      this->m_fadeOutAnimationPlaying = false;
-      this->m_animationCounter = 5;
-    }
-
-    this->onHide();
-  }
+  virtual void hide() final;
 
   /**
    * @brief Returns whether fade animation is playing
    *
    * @return whether fade animation is playing
    */
-  virtual bool fadeAnimationPlaying() final
-  {
-    return this->m_fadeInAnimationPlaying || this->m_fadeOutAnimationPlaying;
-  }
+  virtual bool fadeAnimationPlaying() final;
 
   /**
    * @brief Closes the Gui
    * @note This makes the Tesla overlay exit and return back to the Tesla-Menu
    *
    */
-  virtual void close() final { this->m_shouldClose = true; }
+  virtual void close() final;
 
   /**
    * @brief Gets the Overlay instance
    *
    * @return Overlay instance
    */
-  static inline Overlay* const get() { return Overlay::s_overlayInstance; }
+  static Overlay* const get();
 
   /**
    * @brief Creates the initial Gui of an Overlay and moves the object to the
@@ -401,10 +323,7 @@ public:
    * @return constexpr std::unique_ptr<T>
    */
   template<typename T, typename... Args>
-  constexpr inline std::unique_ptr<T> initially(Args&&... args)
-  {
-    return std::make_unique<T>(args...);
-  }
+  constexpr inline std::unique_ptr<T> initially(Args&&... args);
 
 private:
   using GuiPtr = std::unique_ptr<tsl::Gui>;
@@ -425,69 +344,39 @@ private:
    * @brief Initializes the Renderer
    *
    */
-  virtual void initScreen() final { gfx::Renderer::get().init(); }
+  virtual void initScreen() final;
 
   /**
    * @brief Exits the Renderer
    *
    */
-  virtual void exitScreen() final { gfx::Renderer::get().exit(); }
+  virtual void exitScreen() final;
 
   /**
    * @brief Weather or not the Gui should get hidden
    *
    * @return should hide
    */
-  virtual bool shouldHide() final { return this->m_shouldHide; }
+  virtual bool shouldHide() final;
 
   /**
    * @brief Weather or not hte Gui should get closed
    *
    * @return should close
    */
-  virtual bool shouldClose() final { return this->m_shouldClose; }
+  virtual bool shouldClose() final;
 
   /**
    * @brief Handles fade in and fade out animations of the Overlay
    *
    */
-  virtual void animationLoop() final
-  {
-    if (this->m_fadeInAnimationPlaying) {
-      this->m_animationCounter++;
-
-      if (this->m_animationCounter >= 5)
-        this->m_fadeInAnimationPlaying = false;
-    }
-
-    if (this->m_fadeOutAnimationPlaying) {
-      this->m_animationCounter--;
-
-      if (this->m_animationCounter == 0) {
-        this->m_fadeOutAnimationPlaying = false;
-        this->m_shouldHide = true;
-      }
-    }
-
-    gfx::Renderer::setOpacity(0.2 * this->m_animationCounter);
-  }
+  virtual void animationLoop() final;
 
   /**
    * @brief Main loop
    *
    */
-  virtual void loop() final
-  {
-    auto& renderer = gfx::Renderer::get();
-
-    renderer.startFrame();
-
-    this->animationLoop();
-    this->getCurrentGui()->update();
-    this->getCurrentGui()->draw(&renderer);
-
-    renderer.endFrame();
-  }
+  virtual void loop() final;
 
   /**
    * @brief Called once per frame with the latest HID inputs
@@ -503,81 +392,26 @@ private:
                            u64 keysHeld,
                            touchPosition touchPos,
                            JoystickPosition joyStickPosLeft,
-                           JoystickPosition joyStickPosRight) final
-  {
-    auto& currentGui = this->getCurrentGui();
-    auto currentFocus = currentGui->getFocusedElement();
-
-    if (currentFocus == nullptr) {
-      if (elm::Element* topElement = currentGui->getTopElement();
-          topElement == nullptr)
-      {
-        return;
-      } else
-        currentFocus = topElement;
-    }
-
-    bool handled = false;
-    elm::Element* parentElement = currentFocus;
-    do {
-      handled = parentElement->onClick(keysDown);
-      parentElement = parentElement->getParent();
-    } while (!handled && parentElement != nullptr);
-
-    if (currentGui != this->getCurrentGui())
-      return;
-
-    handled = handled
-        | currentGui->handleInput(
-            keysDown, keysHeld, touchPos, joyStickPosLeft, joyStickPosRight);
-
-    if (!handled) {
-      if (keysDown & KEY_UP)
-        currentGui->requestFocus(currentFocus->getParent(), FocusDirection::Up);
-      else if (keysDown & KEY_DOWN)
-        currentGui->requestFocus(currentFocus->getParent(),
-                                 FocusDirection::Down);
-      else if (keysDown & KEY_LEFT)
-        currentGui->requestFocus(currentFocus->getParent(),
-                                 FocusDirection::Left);
-      else if (keysDown & KEY_RIGHT)
-        currentGui->requestFocus(currentFocus->getParent(),
-                                 FocusDirection::Right);
-    }
-  }
+                           JoystickPosition joyStickPosRight) final;
 
   /**
    * @brief Clears the screen
    *
    */
-  virtual void clearScreen() final
-  {
-    auto& renderer = gfx::Renderer::get();
-
-    renderer.startFrame();
-    renderer.clearScreen();
-    renderer.endFrame();
-  }
+  virtual void clearScreen() final;
 
   /**
    * @brief Reset hide and close flags that were previously set by \ref
    * Overlay::close() or \ref Overlay::hide()
    *
    */
-  virtual void resetFlags() final
-  {
-    this->m_shouldHide = false;
-    this->m_shouldClose = false;
-  }
+  virtual void resetFlags() final;
 
   /**
    * @brief Disables the next animation that would play
    *
    */
-  virtual void disableNextAnimation() final
-  {
-    this->m_disableNextAnimation = true;
-  }
+  virtual void disableNextAnimation() final;
 
   /**
    * @brief Creates a new Gui and changes to it
@@ -588,16 +422,7 @@ private:
    * @return Reference to the newly created Gui
    */
   template<typename G, typename... Args>
-  std::unique_ptr<tsl::Gui>& changeTo(Args&&... args)
-  {
-    auto newGui = std::make_unique<G>(std::forward<Args>(args)...);
-    newGui->m_topElement = newGui->createUI();
-    newGui->requestFocus(newGui->m_topElement, FocusDirection::None);
-
-    this->m_guiStack.push(std::move(newGui));
-
-    return this->m_guiStack.top();
-  }
+  std::unique_ptr<tsl::Gui>& changeTo(Args&&... args);
 
   /**
    * @brief Changes to a different Gui
@@ -605,33 +430,13 @@ private:
    * @param gui Gui to change to
    * @return Reference to the Gui
    */
-  std::unique_ptr<tsl::Gui>& changeTo(std::unique_ptr<tsl::Gui>&& gui)
-  {
-    gui->m_topElement = gui->createUI();
-    gui->requestFocus(gui->m_topElement, FocusDirection::None);
-
-    this->m_guiStack.push(std::move(gui));
-
-    return this->m_guiStack.top();
-  }
+  std::unique_ptr<tsl::Gui>& changeTo(std::unique_ptr<tsl::Gui>&& gui);
 
   /**
    * @brief Pops the top Gui from the stack and goes back to the last one
    * @note The Overlay gets closes once there are no more Guis on the stack
    */
-  void goBack()
-  {
-    if (!this->m_closeOnExit && this->m_guiStack.size() == 1) {
-      this->hide();
-      return;
-    }
-
-    if (!this->m_guiStack.empty())
-      this->m_guiStack.pop();
-
-    if (this->m_guiStack.empty())
-      this->close();
-  }
+  void goBack();
 
   template<typename G, typename... Args>
   friend std::unique_ptr<tsl::Gui>& changeTo(Args&&... args);
@@ -644,175 +449,6 @@ private:
   friend class tsl::Gui;
 };
 
-namespace impl
-{
-
-/**
- * @brief Data shared between the different threads
- *
- */
-struct SharedThreadData
-{
-  bool running = false;
-
-  Event comboEvent = {0}, homeButtonPressEvent = {0},
-        powerButtonPressEvent = {0};
-
-  u64 launchCombo = KEY_L | KEY_DDOWN | KEY_RSTICK;
-  bool overlayOpen = false;
-
-  std::mutex dataMutex;
-  u64 keysDown = 0;
-  u64 keysDownPending = 0;
-  u64 keysHeld = 0;
-  HidTouchScreenState touchState = {0};
-  JoystickPosition joyStickPosLeft = {0}, joyStickPosRight = {0};
-};
-
-/**
- * @brief Parses the Tesla settings
- *
- * @param[out] launchCombo Overlay launch button combo
- */
-static void parseOverlaySettings(u64& launchCombo)
-{
-  FILE* configFile = fopen("sdmc:/config/tesla/config.ini", "r");
-
-  if (configFile == nullptr)
-    return;
-
-  fseek(configFile, 0, SEEK_END);
-  size_t configFileSize = ftell(configFile);
-  rewind(configFile);
-
-  std::string configFileData(configFileSize, '\0');
-  fread(&configFileData[0], sizeof(char), configFileSize, configFile);
-  fclose(configFile);
-
-  hlp::ini::IniData parsedConfig = hlp::ini::parseIni(configFileData);
-
-  launchCombo = 0x00;
-  size_t max_combo = 4;
-  for (std::string key : hlp::split(parsedConfig["tesla"]["key_combo"], '+')) {
-    launchCombo |= hlp::stringToKeyCode(key);
-    if (!--max_combo) {
-      return;
-    }
-  }
-}
-
-/**
- * @brief Input polling loop thread
- *
- * @tparam launchFlags Launch flags
- * @param args Used to pass in a pointer to a \ref SharedThreadData struct
- */
-template<impl::LaunchFlags launchFlags>
-static void hidInputPoller(void* args)
-{
-  SharedThreadData* shData = static_cast<SharedThreadData*>(args);
-
-  // Parse Tesla settings
-  impl::parseOverlaySettings(shData->launchCombo);
-
-  padInitializeAny(&pad);
-
-  hidInitializeTouchScreen();
-
-  // Drop all inputs from the previous overlay
-  padUpdate(&pad);
-
-  while (shData->running) {
-    // Scan for input changes
-    padUpdate(&pad);
-
-    // Read in HID values
-    {
-      std::scoped_lock lock(shData->dataMutex);
-
-      shData->keysDown = padGetButtonsDown(&pad);
-      shData->keysHeld = padGetButtons(&pad);
-      shData->joyStickPosLeft = padGetStickPos(&pad, 0);
-      shData->joyStickPosRight = padGetStickPos(&pad, 1);
-
-      // Read in touch positions
-      if (hidGetTouchScreenStates(&shData->touchState, 1) == 0)
-        shData->touchState = {0};
-
-      if (((shData->keysHeld & shData->launchCombo) == shData->launchCombo)
-          && shData->keysDown & shData->launchCombo)
-      {
-        if (shData->overlayOpen) {
-          tsl::Overlay::get()->hide();
-          shData->overlayOpen = false;
-        } else
-          eventFire(&shData->comboEvent);
-      }
-
-      shData->keysDownPending |= shData->keysDown;
-    }
-
-    // 20 ms
-    svcSleepThread(20E6);
-  }
-}
-
-/**
- * @brief Home button detection loop thread
- * @note This makes sure that focus cannot glitch out when pressing the home
- * button
- *
- * @param args Used to pass in a pointer to a \ref SharedThreadData struct
- */
-static void homeButtonDetector(void* args)
-{
-  SharedThreadData* shData = static_cast<SharedThreadData*>(args);
-
-  // To prevent focus glitchout, close the overlay immediately when the home
-  // button gets pressed
-  hidsysAcquireHomeButtonEventHandle(&shData->homeButtonPressEvent, false);
-
-  while (shData->running) {
-    if (R_SUCCEEDED(eventWait(&shData->homeButtonPressEvent, 100'000'000))) {
-      eventClear(&shData->homeButtonPressEvent);
-
-      if (shData->overlayOpen) {
-        tsl::Overlay::get()->hide();
-        shData->overlayOpen = false;
-      }
-    }
-  }
-}
-
-/**
- * @brief Power button detection loop thread
- * @note This makes sure that focus cannot glitch out when pressing the power
- * button
- *
- * @param args Used to pass in a pointer to a \ref SharedThreadData struct
- */
-static void powerButtonDetector(void* args)
-{
-  SharedThreadData* shData = static_cast<SharedThreadData*>(args);
-
-  // To prevent focus glitchout, close the overlay immediately when the power
-  // button gets pressed
-  hidsysAcquireSleepButtonEventHandle(&shData->powerButtonPressEvent, false);
-
-  while (shData->running) {
-    if (R_SUCCEEDED(eventWait(&shData->powerButtonPressEvent, 100'000'000))) {
-      eventClear(&shData->powerButtonPressEvent);
-
-      if (shData->overlayOpen) {
-        tsl::Overlay::get()->hide();
-        shData->overlayOpen = false;
-      }
-    }
-  }
-}
-
-}  // namespace impl
-
 /**
  * @brief Creates a new Gui and changes to it
  *
@@ -822,26 +458,16 @@ static void powerButtonDetector(void* args)
  * @return Reference to the newly created Gui
  */
 template<typename G, typename... Args>
-std::unique_ptr<tsl::Gui>& changeTo(Args&&... args)
-{
-  return Overlay::get()->changeTo<G, Args...>(std::forward<Args>(args)...);
-}
+std::unique_ptr<tsl::Gui>& changeTo(Args&&... args);
 
 /**
  * @brief Pops the top Gui from the stack and goes back to the last one
  * @note The Overlay gets closes once there are no more Guis on the stack
  */
-static void goBack()
-{
-  Overlay::get()->goBack();
-}
+void goBack();
 
-static void setNextOverlay(std::string ovlPath, std::string args)
-{
-  args += " --skipCombo";
+void setNextOverlay(std::string ovlPath, std::string args);
 
-  envSetNextLoad(ovlPath.c_str(), args.c_str());
-}
 
 /**
  * @brief libtesla's main function
@@ -855,120 +481,7 @@ static void setNextOverlay(std::string ovlPath, std::string args)
  * @return int result
  */
 template<typename TOverlay, impl::LaunchFlags launchFlags>
-static inline int loop(int argc, char** argv)
-{
-  static_assert(std::is_base_of_v<tsl::Overlay, TOverlay>,
-                "tsl::loop expects a type derived from tsl::Overlay");
-
-  impl::SharedThreadData shData;
-
-  shData.running = true;
-
-  Thread hidPollerThread, homeButtonDetectorThread, powerButtonDetectorThread;
-  threadCreate(&hidPollerThread,
-               impl::hidInputPoller<launchFlags>,
-               &shData,
-               nullptr,
-               0x1000,
-               0x2C,
-               -2);
-  threadCreate(&homeButtonDetectorThread,
-               impl::homeButtonDetector,
-               &shData,
-               nullptr,
-               0x1000,
-               0x2C,
-               -2);
-  threadCreate(&powerButtonDetectorThread,
-               impl::powerButtonDetector,
-               &shData,
-               nullptr,
-               0x1000,
-               0x2C,
-               -2);
-  threadStart(&hidPollerThread);
-  threadStart(&homeButtonDetectorThread);
-  threadStart(&powerButtonDetectorThread);
-
-  eventCreate(&shData.comboEvent, false);
-
-  auto& overlay = tsl::Overlay::s_overlayInstance;
-  overlay = new TOverlay();
-  overlay->m_closeOnExit =
-      (u8(launchFlags) & u8(impl::LaunchFlags::CloseOnExit))
-      == u8(impl::LaunchFlags::CloseOnExit);
-
-  tsl::hlp::doWithSmSession([&overlay] { overlay->initServices(); });
-  overlay->initScreen();
-  overlay->changeTo(overlay->loadInitialGui());
-
-  // Argument parsing
-  for (u8 arg = 0; arg < argc; arg++) {
-    if (strcasecmp(argv[arg], "--skipCombo") == 0) {
-      eventFire(&shData.comboEvent);
-      overlay->disableNextAnimation();
-    }
-  }
-
-  while (shData.running) {
-    eventWait(&shData.comboEvent, UINT64_MAX);
-    eventClear(&shData.comboEvent);
-    shData.overlayOpen = true;
-
-    hlp::requestForeground(true);
-
-    overlay->show();
-    overlay->clearScreen();
-
-    while (shData.running) {
-      overlay->loop();
-
-      {
-        std::scoped_lock lock(shData.dataMutex);
-        if (!overlay->fadeAnimationPlaying()) {
-          overlay->handleInput(shData.keysDownPending,
-                               shData.keysHeld,
-                               shData.touchState.touches[0],
-                               shData.joyStickPosLeft,
-                               shData.joyStickPosRight);
-        }
-        shData.keysDownPending = 0;
-      }
-
-      if (overlay->shouldHide())
-        break;
-
-      if (overlay->shouldClose())
-        shData.running = false;
-    }
-
-    overlay->clearScreen();
-    overlay->resetFlags();
-
-    hlp::requestForeground(false);
-
-    shData.overlayOpen = false;
-    eventClear(&shData.comboEvent);
-  }
-
-  eventClose(&shData.homeButtonPressEvent);
-  eventClose(&shData.powerButtonPressEvent);
-  eventClose(&shData.comboEvent);
-
-  threadWaitForExit(&hidPollerThread);
-  threadClose(&hidPollerThread);
-  threadWaitForExit(&homeButtonDetectorThread);
-  threadClose(&homeButtonDetectorThread);
-  threadWaitForExit(&powerButtonDetectorThread);
-  threadClose(&powerButtonDetectorThread);
-
-  overlay->exitScreen();
-  overlay->exitServices();
-
-  delete overlay;
-
-  return 0;
-}
+int loop(int argc, char** argv);
 
 }  // namespace tsl
 

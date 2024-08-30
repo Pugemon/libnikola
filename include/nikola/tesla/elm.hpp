@@ -160,25 +160,25 @@ public:
    *
    * @return X position
    */
-  virtual inline u16 getX() final { return this->m_x; }
+  virtual u16 getX() final { return this->m_x; }
   /**
    * @brief Gets the element's Y position
    *
    * @return Y position
    */
-  virtual inline u16 getY() final { return this->m_y; }
+  virtual u16 getY() final { return this->m_y; }
   /**
    * @brief Gets the element's Width
    *
    * @return Width
    */
-  virtual inline u16 getWidth() final { return this->m_width; }
+  virtual u16 getWidth() final { return this->m_width; }
   /**
    * @brief Gets the element's Height
    *
    * @return Height
    */
-  virtual inline u16 getHeight() final { return this->m_height; }
+  virtual u16 getHeight() final { return this->m_height; }
 
   /**
    * @brief Sets the element's parent
@@ -186,21 +186,21 @@ public:
    *
    * @param parent Parent
    */
-  virtual inline void setParent(Element* parent) final;
+  virtual void setParent(Element* parent) final;
 
   /**
    * @brief Get the element's parent
    *
    * @return Parent
    */
-  virtual inline Element* getParent() final;
+  virtual Element* getParent() final;
 
   /**
    * @brief Marks this element as focused or unfocused to draw the highlight
    *
    * @param focused Focused
    */
-  virtual inline void setFocused(bool focused);
+  virtual void setFocused(bool focused);
 
 protected:
   constexpr static inline auto a = &gfx::Renderer::a;
@@ -354,7 +354,7 @@ public:
    *
    * @param text Text
    */
-  virtual inline void setText(std::string text) final;
+  virtual void setText(std::string text) final;
 
   /**
    * @brief Sets the right hand value text of the list item
@@ -362,7 +362,7 @@ public:
    * @param value Text
    * @param faint Should the text be drawn in a glowing green or a faint gray
    */
-  virtual inline void setValue(std::string value, bool faint = false);
+  virtual void setValue(std::string value, bool faint = false);
 
 protected:
   std::string m_text;
@@ -402,7 +402,7 @@ public:
    *
    * @return State
    */
-  virtual inline bool getState();
+  virtual bool getState();
 
   /**
    * @brief Sets the current state of the toggle. Updates the Value

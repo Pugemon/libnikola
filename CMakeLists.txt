@@ -30,6 +30,8 @@ add_library(
         source/tesla/hlp.cpp
         source/tesla/elm.cpp
         source/tesla/gfx.cpp
+        source/tesla/impl.cpp
+        source/tesla.cpp
 )
 add_library(libnikola::libnikola ALIAS libnikola_libnikola)
 
